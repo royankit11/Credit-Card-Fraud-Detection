@@ -1,7 +1,7 @@
 # Credit Card Fraud Detection - ML Project
 
 
-# Methods
+## Methods
 
 To prepare the dataset for our model, we need to do some data preprocessing. Since our data contains categorical features, we need to do encoding. We can use one-hot encoding for variables with only a few unique values, such as “transaction category” or “state (location”. For high cardinality variables, like “merchant” or “job”, we can use frequency encoding. This approach avoids the dimensionality explosion that would occur with one-hot encoding. We also need to standardize certain numeric values. Continuous variables such as transaction amount and city population will be standardized so that they contribute equally to model training. This is particularly important for distance-based methods like K-Means clustering and Isolation Forest where consistent feature scales improve convergence. Lastly, we might need to do some minor feature engineering. For instance, extracting day of the week, hour, and weekend/weekday from “transaction date/time” or computing the distance between (lat, long) and (merchant_lat, merchant_long).
 
