@@ -21,6 +21,15 @@ The dataset used in this study comes from a Kaggle competition focused on detect
 
 _Link to Dataset:_ (https://www.kaggle.com/competitions/ieee-fraud-detection/data)
 
+## 2. Problem Definition
+
+### 2.1 Problem
+
+This is a binary classification task: for each online transaction, estimate the probability of fraud and convert it to a yes/no decision by applying a threshold. Inputs come from the joined transaction and identity tables and include both categorical and numeric fields. Class imbalance is severe because fraud represents a very small share of all rows. Transaction patterns change over time (new devices, merchants, and attack styles), so model validation uses a time-based split to avoid leakage and to test generalization. Light feature engineering is in scope and kept simple: convert timestamps to hour/day-of-week, compute past-only rolling counts (for example, recent transactions per card), handle missing values with simple imputation, and standardize numeric features for distance- and isolation-based methods. Tree models do not require scaling. Because not all fraud is labeled, an unsupervised anomaly score (for example, from Isolation Forest or clustering) can be combined with the supervised probability to highlight unusual patterns. 
+
+### 2.2 Motivation
+
+Early and accurate detection lowers chargebacks, protects cardholders, and avoids false declines that frustrate merchants and customers. Decisions must balance recall (catching fraud) with precision (avoiding bad alerts) under a fixed review capacity (alert budget) for human analysts. For this reason, the project focuses on calibrated probabilities and threshold tuning to meet the review capacity rather than raw accuracy. With heavy imbalance, precision–recall metrics are the best fit: AUPRC is the primary score, with recall at fixed precision and precision at fixed recall as operational targets. Unsupervised signals help surface novel fraud tactics as attackers change behavior or when labels arrive late. Fairness and privacy also matter: track precision and decline rates by segment (for example, device types or regions), keep humans in the loop near the decision boundary, and follow data-handling rules. The goal is simple—reduce fraud losses without blocking legitimate customers.
 
 ## 3. Methods
 
