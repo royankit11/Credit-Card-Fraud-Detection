@@ -1,5 +1,23 @@
 # Credit Card Fraud Detection - ML Project
 
+## 1. Introduction
+
+Finding online fraud is an essential part of protecting financial institutions and e-commerce sites. The growth of international e-commerce has raised the need for effective models that can detect fraudulent activity promptly. In this study, we aim to explore a machine learning-based approach to predict the probability of fraudulent online transactions.
+
+### 1.1 Literature Review
+
+Fraud detection has been widely studied, and several machine learning models have been proposed for detecting fraudulent transactions. One of the most well-known approaches is using supervised learning techniques like Logistic Regression, Decision Trees and Random Forests.
+Logistic Regression, for instance, is widely used due to its simplicity and interpretability, for any kind of fraud detection [1] . Decision Trees and Random forests have proven effective for fraud detection because they can capture non-linear relationships and handle complex features, such as interactions between categorical variables  [2]. Supervised methods work best when there is a significant amount of labeled data available, which is often challenging.
+Unsupervised learning methods are particularly useful in fraud detection when labeled data is scarce or unavailable. Clustering techniques such as K-Means and DBSCAN have been used to detect anomalies by grouping similar transactions together and flagging outliers as potential fraud [3].
+Hybrid strategies that incorporate both supervised and unsupervised techniques have shown promise in recent years. A hybrid strategy could use supervised models to classify the clusters after first training a clustering model to find groups of related transactions [4].
+Deep learning techniques, like autoencoders and neural networks, have become popular recently because of their capacity to recognize intricate patterns, but they are frequently computationally costly and depend on sizable, labeled datasets for optimal performance. [5]
+
+### 1.2 Dataset Description
+
+The dataset used in this study comes from a Kaggle competition focused on detecting fraudulent online transactions. It includes two main files: *identity* and *transaction*, linked by *TransactionID*. The transactional data contains features like product codes, card details, and transaction metadata, while the identity data provides information about the user's device and personal identity. The target variable *isFraud*, which indicates whether a transaction is fraudulent.
+
+_Link to Dataset:_ (https://www.kaggle.com/competitions/ieee-fraud-detection/data)
+
 
 ## Methods
 
