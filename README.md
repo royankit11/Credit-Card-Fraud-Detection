@@ -22,11 +22,17 @@ The dataset used in this study comes from a Kaggle competition focused on detect
 _Link to Dataset:_ (https://www.kaggle.com/competitions/ieee-fraud-detection/data)
 
 
-## Methods
+## 3. Methods
+
+### 3.1 Data Preprocessing
 
   To prepare the dataset for our model, we need to do some data preprocessing. Since our data contains categorical features, we need to do encoding. We can use one-hot encoding for variables with only a few unique values, such as `ProductCD` or `DeviceType`. For high cardinality variables, like `card1` or `P_emaildomain`, we can use frequency encoding. This approach avoids the dimensionality explosion that would occur with one-hot encoding. We also need to standardize certain numeric values. Continuous variables such as `TransactionAmt` will be standardized so that they contribute equally to model training. This is particularly important for distance-based methods like **K-Means clustering** and **Isolation Forest** where consistent feature scales improve convergence. Lastly, we might need to do some minor feature engineering. For instance, extracting day of the week, hour, and weekend/weekday from `TransactionDT`. Additional engineered features may include aggregated statistics (e.g. number of transactions per card within a given time window) to capture patterns in user behavior.
 
+### 3.2 Supervised Learning
+
   Our project will explore both supervised and unsupervised learning methods for fraud detection. For supervised learning, we will use classification models trained on the `isFraud` label. **Logistic Regression** will serve as a baseline due to its interpretability and ability to highlight which features most strongly influence fraud predictions. **Random Forest** will be applied to capture non-linear feature interactions and provide feature importance measures. We will also evaluate **Gradient Boosting**, which is well-suited for tabular, imbalanced data and often achieves good results in fraud detection tasks. Together, these models provide a balance between interpretability and predictive power.
+
+### 3.3 Unsupervised Learning
 
   In addition to supervised learning, unsupervised methods will be incorporated to detect fraudulent behavior without relying solely on labeled data. **K-Means clustering** will group transactions into clusters, with outliers flagged as possible fraud cases when they deviate from typical spending behavior. We will also apply Isolation Forest, which isolates outliers in feature space and is particularly effective for rare-event detection. These methods reflect real-world fraud detection challenges, where many fraudulent transactions may remain unlabeled or unseen during training.
 
