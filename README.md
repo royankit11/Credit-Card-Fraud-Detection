@@ -45,6 +45,20 @@ Early and accurate detection lowers chargebacks, protects cardholders, and avoid
 
   In addition to supervised learning, unsupervised methods will be incorporated to detect fraudulent behavior without relying solely on labeled data. **K-Means clustering** will group transactions into clusters, with outliers flagged as possible fraud cases when they deviate from typical spending behavior. We will also apply Isolation Forest, which isolates outliers in feature space and is particularly effective for rare-event detection. These methods reflect real-world fraud detection challenges, where many fraudulent transactions may remain unlabeled or unseen during training.
 
+## 4. Results and Discussion
+
+### 4.1 Quantitive Metrics
+
+For this project, we’ll be using several metrics to evaluate our models. Precision will tell us the percentage of transactions flagged as fraud that are truly fraudulent, helping us avoid too many false positives. Recall will measure the percentage of actual fraud cases we manage to catch, since missing fraud is especially costly. Because there’s always a tradeoff between precision and recall, we’ll also use the F1-score to see how well the model balances the two. Finally, the PR-AUC curve will give us a broader picture by showing how precision and recall change across different thresholds, which helps us understand how flexible and reliable the model is in practice.
+
+### 4.2 Project Goals
+
+Our main goal is to catch as much fraud as possible, aiming for a recall of around 99%, while also keeping precision high at about 95% so that flagged transactions are almost always real fraud. Hitting both targets at once is tough, but the F1-score helps us measure how close we get to that balance, and we’re aiming for a score above 0.95. For PR-AUC, the goal is to have consistently strong values across thresholds, which would show that the model remains effective even when the data is highly imbalanced. Beyond performance numbers, we also want to make sure the model is fair—avoiding bias against certain groups or regions—and efficient enough to run in real time without unnecessary costs or energy use.
+
+### 4.2 Expected Results
+
+In terms of expected results, we think models like Random Forests and Gradient Boosting will likely deliver recall in the 90–95% range and precision around 90–95% as well. That makes reaching the exact 99% recall and 95% precision targets difficult, but we can still expect strong performance. In practice, the F1-score will probably land between 0.92 and 0.94, which shows a healthy balance between catching fraud and keeping false alarms low. For PR-AUC, we expect results above 0.85, which would demonstrate the model is consistently reliable at different thresholds. Even if the exact goals aren’t fully met, these results would still represent a powerful fraud detection system that catches most fraud while keeping customer disruptions to a minimum, all while staying fair and efficient.
+
 ## 5. References
 
 [1]	S. Pamulaparthyvenkata, M. Vishwanath, N. R. Desani, P. Murugesan, and D. Gottipalli, “Non Linear-Logistic Regression Analysis for AI-Driven Medicare Fraud Detection,” International Conference on Distributed Systems, Computer Networks and Cybersecurity, ICDSCNC 2024, 2024, doi: 10.1109/ICDSCNC62492.2024.10939147.
