@@ -2,22 +2,22 @@
 
 ## 1. Introduction
 
-Finding online fraud is an essential part of protecting financial institutions and e-commerce sites. The growth of international e-commerce has raised the need for effective models that can detect fraudulent activity promptly. In this study, we aim to explore a machine learning-based approach to predict the probability of fraudulent online transactions.
+Finding online fraud is an essential part of protecting financial institutions and e-commerce sites. The growth of international e-commerce has raised the need for effective models that can detect fraudulent activity. In this study, we aim to explore a machine learning-based approach to predict fraudulent online transactions.
 
 ### 1.1 Literature Review
 
 Fraud detection has been widely studied, and several machine learning models have been proposed for detecting fraudulent transactions. One of the most well-known approaches is using supervised learning techniques like Logistic Regression, Decision Trees and Random Forests.
-Logistic Regression, for instance, is widely used due to its simplicity and interpretability, for any kind of fraud detection [1] . Decision Trees and Random forests have proven effective for fraud detection because they can capture non-linear relationships and handle complex features, such as interactions between categorical variables  [2]. Supervised methods work best when there is a significant amount of labeled data available, which is often challenging.
+Logistic Regression is valued for simplicity and interpretability [1], while tree-based models handle non-linear interactions and complex feature spaces effectively  [2]. These methods, however, rely heavily on labeled data, which is often limited.
 
-Unsupervised learning methods are particularly useful in fraud detection when labeled data is scarce or unavailable. Clustering techniques such as K-Means and DBSCAN have been used to detect anomalies by grouping similar transactions together and flagging outliers as potential fraud [3].
+Unsupervised learning methods help when labels are scarce. K-Means and DBSCAN group transactions by similarity, flagging outliers as anomalies [3].
 
 Hybrid strategies that incorporate both supervised and unsupervised techniques have shown promise in recent years. A hybrid strategy could use supervised models to classify the clusters after first training a clustering model to find groups of related transactions [4].
 
-Deep learning techniques, like autoencoders and neural networks, have become popular recently because of their capacity to recognize intricate patterns, but they are frequently computationally costly and depend on sizable, labeled datasets for optimal performance. [5]
+Deep learning techniques, like autoencoders and neural networks, have become popular recently because of their capacity to recognize intricate patterns, but are computationally expensive and require large labeled datasets. [5]
 
 ### 1.2 Dataset Description
 
-The dataset used in this study comes from a Kaggle competition focused on detecting fraudulent online transactions. It includes two main files: *identity* and *transaction*, linked by *TransactionID*. The transactional data contains features like product codes, card details, and transaction metadata, while the identity data provides information about the user's device and personal identity. The target variable *isFraud*, which indicates whether a transaction is fraudulent.
+We use the Kaggle IEEE-CIS fraud detection dataset. It includes two main files: *identity* and *transaction*, linked by *TransactionID*. The transactional data contains features like product codes, card details, and transaction metadata, while the identity data provides device and user information. The target variable *isFraud* indicates whether a transaction is fraudulent.
 
 _Link to Dataset:_ (https://www.kaggle.com/competitions/ieee-fraud-detection/data)
 
@@ -25,7 +25,7 @@ _Link to Dataset:_ (https://www.kaggle.com/competitions/ieee-fraud-detection/dat
 
 ### 2.1 Problem
 
-This is a binary classification task: for each online transaction, estimate the probability of fraud and convert it into a yes/no decision by applying a threshold. Inputs come from the joined transaction and identity tables (on TransactionID); they include both categorical and numeric fields. Class imbalance is severe because fraud represents a very small share of all rows. Transaction patterns change over time (new devices, merchants, and attack styles), so model validation uses a time-based split to avoid leakage and to test generalization. Light feature engineering is in scope and kept simple: extract hour of day and day of week from timestamps, compute past-only rolling counts (for example, recent transactions per card), handle missing values with simple imputation, and standardize numeric features for distance- and isolation-based methods. Tree models do not require scaling. Because not all fraud is labeled, an unsupervised anomaly score (for example, from Isolation Forest or clustering) can be combined with the supervised probability to highlight unusual patterns.
+This is a binary classification task: estimate the probability of fraud for each transaction and convert it into a yes/no decision by applying a threshold. Inputs are categorical and numeric features from the merged tables. Class imbalance is severe, with fraud comprising a small fraction of records. Validation uses a time-based split to reflect real-world drift in fraud tactics and avoid data leakage. Feature engineering is minimal but includes time-based features (hour, day), rolling counts of recent activity, and imputation for missing values. Continuous features are standardized for distance-based models, though tree models can handle raw values. Because not all fraud is labeled, we also incorporate unsupervised anomaly scores (e.g., Isolation Forest, clustering) to complement supervised probabilities.
 
 ### 2.2 Motivation
 
@@ -35,21 +35,32 @@ Early and accurate detection lowers chargebacks, protects cardholders, and avoid
 
 ### 3.1 Data Preprocessing
 
-  To prepare the dataset for our model, we need to do some data preprocessing. Since our data contains categorical features, we need to do encoding. We can use one-hot encoding for variables with only a few unique values, such as `ProductCD` or `DeviceType`. For high cardinality variables, like `card1` or `P_emaildomain`, we can use frequency encoding. This approach avoids the dimensionality explosion that would occur with one-hot encoding. We also need to standardize certain numeric values. Continuous variables such as `TransactionAmt` will be standardized so that they contribute equally to model training. This is particularly important for distance-based methods like **K-Means clustering** and **Isolation Forest** where consistent feature scales improve convergence. Lastly, we might need to do some minor feature engineering. For instance, extracting day of the week, hour, and weekend/weekday from `TransactionDT`. Additional engineered features may include aggregated statistics (e.g. number of transactions per card within a given time window) to capture patterns in user behavior.
+Preprocessing includes encoding, scaling, and light feature engineering.
+* **Encoding**: One-hot encoding for low-cardinality features (e.g., `ProductCD`, `DeviceType`) and frequency encoding for high-cardinality features (e.g., `card1`, `P_emaildomain`) to avoid dimensionality issues.
+* **Scaling**: Standardization for continuous variables like `TransactionAmt`, important for clustering and Isolation Forest.
+* **Feature Engineering**: Extracting day, hour, and weekend flags from timestamps; generating aggregate statistics such as transaction counts per card over time windows.
 
 ### 3.2 Supervised Learning
 
-  Our project will explore both supervised and unsupervised learning methods for fraud detection. For supervised learning, we will use classification models trained on the `isFraud` label. **Logistic Regression** will serve as a baseline due to its interpretability and ability to highlight which features most strongly influence fraud predictions. **Random Forest** will be applied to capture non-linear feature interactions and provide feature importance measures. We will also evaluate **Gradient Boosting**, which is well-suited for tabular, imbalanced data and often achieves good results in fraud detection tasks. Together, these models provide a balance between interpretability and predictive power.
+We evaluate multiple supervised models:
+* **Logistic Regression** as a baseline, providing interpretability and coefficients that highlight key risk factors.
+* **Random Forest** for capturing non-linear feature interactions and generating feature importance.
+* **Gradient Boosting**, well-suited for imbalanced tabular data and expected to deliver strong performance.
+
+Together, these methods balance interpretability with predictive power.
 
 ### 3.3 Unsupervised Learning
 
-  In addition to supervised learning, unsupervised methods will be incorporated to detect fraudulent behavior without relying solely on labeled data. **K-Means clustering** will group transactions into clusters, with outliers flagged as possible fraud cases when they deviate from typical spending behavior. We will also apply Isolation Forest, which isolates outliers in feature space and is particularly effective for rare-event detection. These methods reflect real-world fraud detection challenges, where many fraudulent transactions may remain unlabeled or unseen during training.
+To complement supervised approaches, we use unsupervised anomaly detection:
+* **K-Means clustering** groups transactions, flagging those far from cluster centers.
+* **Isolation Forest** isolates anomalies effectively in high-dimensional data.
+These methods reflect real-world challenges where fraudulent cases are underreported or unseen in training data.
 
 ## 4. Results and Discussion
 
 ### 4.1 Quantitive Metrics
 
-For this project, we’ll be using several metrics to evaluate our models. Precision will tell us the percentage of transactions flagged as fraud that are truly fraudulent, helping us avoid too many false positives. Recall will measure the percentage of actual fraud cases we manage to catch, since missing fraud is especially costly. Because there’s always a tradeoff between precision and recall, we’ll also use the F1-score to see how well the model balances the two. Finally, the PR-AUC curve will give us a broader picture by showing how precision and recall change across different thresholds, which helps us understand how flexible and reliable the model is in practice.
+For this project, we’ll be using several metrics to evaluate our models. Precision will tell us the percentage of transactions flagged as fraud that are truly fraudulent, helping us avoid too many false positives. Recall will measure the percentage of actual fraud cases we manage to catch, since missing fraud is especially costly. Because there’s always a tradeoff between precision and recall, we’ll also use the F1-score balance the two. Finally, the PR-AUC curve will give us a broader picture by showing how precision and recall change across different thresholds, which helps us understand how flexible and reliable the model is in practice.
 
 ### 4.2 Project Goals
 
@@ -71,6 +82,16 @@ In terms of expected results, we think models like Random Forests and Gradient B
 
 [5]	S. Banoth and K. Madhavi, “A Novel Deep Learning Framework for Credit Card Fraud Detection,” Proceedings of the 2024 13th International Conference on System Modeling and Advancement in Research Trends, SMART 2024, pp. 191–196, 2024, doi: 10.1109/SMART63812.2024.10882509.
  
+## Contribution Table
+
+| Name             | Proposal Contributions             |
+|------------------|------------------------------------|
+| Ankit Roy        | Methods and creating GitHub        |
+| Hadi Malik       | Results and Discussion             |
+| Yuha Song        | Problem Definition and Gantt Chart |
+| Musaddik Hossain | Introduction and References        |
+| Connor Priest    | Video Presentation                 |
+
 
 
 
