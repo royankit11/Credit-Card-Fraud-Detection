@@ -13,6 +13,30 @@ def load_data():
 def preprocess_data(df):
     if "isFraud" in df.columns:
         df = df.drop(columns=["isFraud"])
+
+    v_cols = [c for c in df.columns if c.startswith("V")]
+    if v_cols:
+        v_df = df[v_cols]
+        nan_patterns = v_df.isna().astype(int).T
+        groups = []
+        used = set()
+        for c in v_cols:
+            if c in used:
+                continue
+            pattern = tuple(v_df[c].isna())
+            group = [g for g in v_cols if tuple(v_df[g].isna()) == pattern]
+            groups.append(group)
+            used.update(group)
+
+        reduced = pd.DataFrame(index=df.index)
+        for g in groups:
+            sub = v_df[g].fillna(v_df[g].median(numeric_only=True))
+            if len(g) > 10:
+                p = PCA(n_components=1, random_state=42)
+                reduced[f"Vgrp_{g[0]}"] = p.fit_transform(sub)
+            else:
+                reduced[f"Vgrp_{g[0]}"] = sub.mean(axis=1)
+        df = pd.concat([df.drop(columns=v_cols), reduced], axis=1)
     
     numeric_cols = df.select_dtypes(include=["number"]).columns.tolist()
     categorical_cols = df.select_dtypes(exclude=["number"]).columns.tolist()
@@ -47,4 +71,4 @@ def run_pca(n_components=20):
     return pca_df, pca, preprocessor
 
 if __name__ == "__main__":
-    run_pca(n_components=20)
+    run_pca(n_components=50)
