@@ -36,7 +36,16 @@ Preprocessing includes encoding, scaling, and light feature engineering.
 * **Scaling**: Standardization for continuous variables like `TransactionAmt`, important for clustering and Isolation Forest.
 * **Feature Engineering**: Extracting day, hour, and weekend flags from timestamps; generating aggregate statistics such as transaction counts per card over time windows.
 
-### 3.2 Supervised Learning
+### 3.2 PCA
+
+PCA was applied to reduce the high-dimensional V1–V339 feature block while retaining most variance.
+The process:
+1. **Group by NaN pattern** - Columns with teh same missing-value structure were grouped
+2. **Within-group reduction** - For each groupL large groups used PCA, medium groups kept uncorrelated subsets, and small groups were averaged.
+3. **Combined reduced groups** - All reduced outputs were merged back into the dataset
+4. **Final PCA** - A global PCA with 50 components captured ~85- 90% of total variance, yielding a compact and efficient feature set for modeling.
+
+### 3.3 Supervised Learning
 
 We'll evaluate multiple supervised models:
 * **Logistic Regression** as a baseline, providing interpretability and coefficients that highlight key risk factors.
@@ -45,7 +54,7 @@ We'll evaluate multiple supervised models:
 
 Together, these methods balance interpretability with predictive power.
 
-### 3.3 Unsupervised Learning
+### 3.4 Unsupervised Learning
 
 To complement supervised approaches, we use unsupervised anomaly detection:
 * **K-Means clustering** groups transactions, flagging those far from cluster centers.
