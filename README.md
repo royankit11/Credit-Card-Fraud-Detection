@@ -40,10 +40,10 @@ Preprocessing includes encoding, scaling, and light feature engineering.
 
 PCA was applied to reduce the high-dimensional V1–V339 feature block while retaining most variance.
 The process:
-1. **Group by NaN pattern** - Columns with teh same missing-value structure were grouped
-2. **Within-group reduction** - For each groupL large groups used PCA, medium groups kept uncorrelated subsets, and small groups were averaged.
-3. **Combined reduced groups** - All reduced outputs were merged back into the dataset
-4. **Final PCA** - A global PCA with 50 components captured ~85- 90% of total variance, yielding a compact and efficient feature set for modeling.
+1. **Group by NaN pattern** - Columns with the same missing-value structure were grouped together.
+2. **Within-group reduction** - For each group: large groups used PCA, medium groups kept uncorrelated subsets, and small groups were averaged.
+3. **Combined reduced groups** - All reduced outputs were merged back into the dataset.
+4. **Final PCA** - A global PCA with 50 components captured 93% of total variance, yielding a compact and efficient feature set for modeling.
 
 ### 3.3 Supervised Learning
 
