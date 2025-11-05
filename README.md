@@ -38,7 +38,7 @@ Preprocessing includes encoding, scaling, and light feature engineering.
 
 ### 3.2 PCA
 
-PCA was applied to reduce the high-dimensional V1–V339 feature block while retaining most variance.
+PCA was applied to reduce the high-dimensional V1–V339 feature block while retaining most of the variance, and later performed again on the entire dataset for further dimensionality reduction.
 The process:
 1. **Group by NaN pattern** - Columns with the same missing-value structure were grouped together.
 2. **Within-group reduction** - For each group: large groups used PCA, medium groups kept uncorrelated subsets, and small groups were averaged.
