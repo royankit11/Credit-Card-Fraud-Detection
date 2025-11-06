@@ -52,7 +52,7 @@ We'll evaluate multiple supervised models:
 * **Random Forest** for capturing non-linear feature interactions and generating feature importance.
 * **Gradient Boosting**, well-suited for imbalanced tabular data and expected to deliver strong performance.
 
-Together, these methods balance interpretability with predictive power.
+Together, these methods balance interpretability with predictive power. For our midterm checkpoint, we have implemented the **logistic regression** model.
 
 ### 3.4 Unsupervised Learning
 
@@ -77,7 +77,7 @@ We expect Random Forests and Gradient Boosting to deliver strong results, with r
 
 ### 4.4 Logistic Regression Results and Analysis
 
-For our supervised model, we created a logistic regression model, outputting the probability a given transaction is fraudulent. We created two major models, one using the features from the orignial dataset, and one with the features from our PCA algorithm. Their results are below:
+For our supervised model, we created a logistic regression model, outputting the probability a given transaction is fraudulent. We created two major models, one using the features from the original dataset, and one with the features from our PCA algorithm. Their results are below:
 
 #### **Regression on Original Features**
 
@@ -107,7 +107,7 @@ For our supervised model, we created a logistic regression model, outputting the
 
 **ROC AUC:** `0.8027`  
 
-From the above statements we are able to learn a lot about how our 2 models preformed. For starters, the ROC AUC is a summary metric, telling us how well our model does in general, amongst the entire data set. From this, we see our model that uses the PCA features generates more error than the model that is trained on the original features. This tells us we need to look further into our PCA algorithm, or maybe that we should not be preforming PCA, and each feature in the dataset is valuable.
+From the above statements we are able to learn a lot about how our 2 models performed. For starters, the ROC AUC is a summary metric, telling us how well our model does in general, amongst the entire data set. From this, we see our model that uses the PCA features generates more error than the model that is trained on the original features. This tells us we need to look further into our PCA algorithm, or maybe that we should not be performing PCA, and each feature in the dataset is valuable.
 
 <img width="1054" alt="Screenshot 2025-11-06 at 8 58 13 AM" src="https://github.gatech.edu/user-attachments/assets/9f65b333-ef2a-45bb-8a06-e0e24ce6844d" />
 
@@ -123,7 +123,7 @@ The graph above is going to be very helpful in helping us continue to check the 
 
 <img width="628" alt="Screenshot 2025-11-06 at 9 35 27 AM" src="https://github.gatech.edu/user-attachments/assets/8426dd0d-78de-4b30-b1d5-248619c778b6" />
 
-The above chart is a historgram, showing the distribution of fraudulent and non fraudulent transactions in the dataset, as well as their predicted probability of how likley the transaction was fraudulent. Given the above graph we first see the count in true fraudulent transactions arise around a probability of 0.1, and increase around 0.4. For our first logistic regression model, we chose a simple threshold of 0.5 to determine what transactions would be classified as fraudulent or not. In a real world scenario, we would likely lower that threshold as we want less fraud to be getting through our model. Fraudulent transactions result in huge losses to customers, so it would be better for a bank or financial institution to flag more activity as fraud in order to avoid as much fraud as possible. 
+The above chart is a histogram, showing the distribution of fraudulent and non fraudulent transactions in the dataset, as well as their predicted probability of how likley the transaction was fraudulent. Given the above graph we first see the count in true fraudulent transactions arise around a probability of 0.1, and increase around 0.4. For our first logistic regression model, we chose a simple threshold of 0.5 to determine what transactions would be classified as fraudulent or not. In a real world scenario, we would likely lower that threshold as we want less fraud to be getting through our model. Fraudulent transactions result in huge losses to customers, so it would be better for a bank or financial institution to flag more activity as fraud in order to avoid as much fraud as possible. 
 
 #### Analysis
 
@@ -149,14 +149,24 @@ For a more in depth look at the code generating these images, look into the logi
  
 ## Contribution Table
 
-| Name             | Proposal Contributions             |
+| Name             | Midterm Contributions              |
 |------------------|------------------------------------|
-| Ankit Roy        | Methods and creating GitHub        |
-| Hadi Malik       | Results and Discussion             |
-| Yuha Song        | Problem Definition and Gantt Chart |
-| Musaddik Hossain | Introduction and References        |
-| Connor Priest    | Video Presentation                 |
+| Ankit Roy        | Implementing logistic regression   |
+| Hadi Malik       | Preprocessing with PCA             |
+| Yuha Song        | Evaluating K Means                 |
+| Musaddik Hossain | Implementing K Means               |
+| Connor Priest    | Evaluating logistic regression     |
 
+
+## Directory and File Explanation
+
+/src/: All code used for preprocessing, implementing, and analyzing models
+/src/preprocess.py: Implements preprocessing with PCA
+/src/logistic_regression_fraud.py: Implements the logistic regression model
+/src/logistic_regression_analysis.ipynb: Evaluates and presents visualizations for logistic regression
+/models/: Stores all the implemented ML models
+/models/logreg_lightweight.pkl: Logistic regression model on the non-PCA dataset
+/models/logreg_pca.pkl: Logistic regression model on the PCA dataset
 
 
 
