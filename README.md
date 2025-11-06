@@ -45,6 +45,8 @@ The process:
 3. **Combined reduced groups** - All reduced outputs were merged back into the dataset.
 4. **Final PCA** - A global PCA with 50 components captured 93% of total variance, yielding a compact and efficient feature set for modeling.
 
+For our midterm checkpoint, the data preprocessing algorithm we implemented is **PCA**.
+
 ### 3.3 Supervised Learning
 
 We'll evaluate multiple supervised models:
@@ -52,7 +54,7 @@ We'll evaluate multiple supervised models:
 * **Random Forest** for capturing non-linear feature interactions and generating feature importance.
 * **Gradient Boosting**, well-suited for imbalanced tabular data and expected to deliver strong performance.
 
-Together, these methods balance interpretability with predictive power. For our midterm checkpoint, we have implemented the **logistic regression** model.
+For our midterm checkpoint, we implemented the **logistic regression** model.
 
 ### 3.4 Unsupervised Learning
 
