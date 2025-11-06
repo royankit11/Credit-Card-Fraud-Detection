@@ -160,18 +160,12 @@ For a more in depth look at the code generating these images, look into the logi
 
 ## Directory and File Explanation
 
-/src/: All code used for preprocessing, implementing, and analyzing models
-
-/src/preprocess.py: Implements preprocessing with PCA
-
-/src/logistic_regression_fraud.py: Implements the logistic regression model
-
-/src/logistic_regression_analysis.ipynb: Evaluates and presents visualizations for logistic regression
-
-/models/: Stores all the implemented ML models
-
-/models/logreg_lightweight.pkl: Logistic regression model on the non-PCA dataset
-
+/src/: All code used for preprocessing, implementing, and analyzing models \
+/src/preprocess.py: Implements preprocessing with PCA \
+/src/logistic_regression_fraud.py: Implements the logistic regression model \
+/src/logistic_regression_analysis.ipynb: Evaluates and presents visualizations for logistic regression \
+/models/: Stores all the implemented ML models \
+/models/logreg_lightweight.pkl: Logistic regression model on the non-PCA dataset \
 /models/logreg_pca.pkl: Logistic regression model on the PCA dataset
 
 
