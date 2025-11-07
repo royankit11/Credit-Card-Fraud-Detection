@@ -156,7 +156,7 @@ We use **K-Means (k=2)** on the standardized numeric features in `augmented_proc
 
 <img alt="Confusion Matrix — K-Means (Train)" src="src/Kmeans/kmeans_confusion_train.png" width="520"/>
 
----
+
 
 #### **[RESULTS] K-Means ⇒ Majority-Label (Test)**
 
@@ -174,6 +174,8 @@ We use **K-Means (k=2)** on the standardized numeric features in `augmented_proc
 ---
 
 The train and test splits show nearly identical behavior, indicating the unsupervised pipeline is not overfitting. In both splits, the **fraud class (1)** attains **higher recall (~0.73)** than precision (~0.61), which means the model **catches most fraud** but at the cost of **more false alarms** (e.g., 35,543 non-fraud labeled as fraud on train; 11,776 on test). Conversely, false negatives are lower (19,804 train; 6,680 test), aligning with a “catch-more-fraud” preference. Overall accuracy (~0.631) is modest—as expected for a label-agnostic method mapped via majority vote—but the stable metrics and confusion matrices suggest K-Means provides a reasonable unsupervised baseline that prioritizes **recall of fraud** over precision and can be useful as an upstream filter or as part of a hybrid pipeline.
+
+---
 
 #### Precision–Recall behavior (score distributions)
 
