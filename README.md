@@ -159,7 +159,6 @@ We additionally compute standard clustering diagnostics to check whether K-Means
 | **Macro Avg** | 0.6369 | 0.6309 | 0.6268 | 149,952 |
 | **Weighted Avg** | 0.6369 | 0.6309 | 0.6268 | 149,952 |
 
-**Confusion Matrix — Train**
 
 <img alt="Confusion Matrix — K-Means (Train)" src="src/Kmeans/kmeans_confusion_train.png" width="520"/>
 
@@ -175,7 +174,6 @@ We additionally compute standard clustering diagnostics to check whether K-Means
 | **Macro Avg** | 0.6365 | 0.6308 | 0.6269 | 49,984 |
 | **Weighted Avg** | 0.6365 | 0.6308 | 0.6269 | 49,984 |
 
-**Confusion Matrix — Test**
 
 <img alt="Confusion Matrix — K-Means (Test)" src="src/Kmeans/kmeans_confusion_test.png" width="520"/>
 
