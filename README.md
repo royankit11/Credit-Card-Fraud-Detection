@@ -137,6 +137,71 @@ Given the state of our model, there are a few steps we can take to look to impro
 
 For a more in depth look at the code generating these images, look into the logistic_regression_analysis notebook file. 
 
+### 4.5 K-Means (Unsupervised) — Results and Analysis
+
+We apply **K-Means (k = 2)** to `augmented_processed.csv` as an unsupervised baseline.  
+Config: `seed = 10`, `test_size = 0.25`, model fit on a **20,000** subsample of the train split; features are median-imputed and standardized.  
+Clusters are mapped to labels {0,1} by **majority vote on the train split**. We also compute a distance-based **fraud score** in `[0,1]`.
+
+#### **Confusion Matrices**
+
+**Train**
+
+|        | Pred 0 | Pred 1 |
+|:-------|-------:|-------:|
+| **True 0** | 39,433 | 35,543 |
+| **True 1** | 19,804 | 55,172 |
+
+**Test**
+
+|        | Pred 0 | Pred 1 |
+|:-------|-------:|-------:|
+| **True 0** | 13,216 | 11,776 |
+| **True 1** | 6,680  | 18,312 |
+
+<p>
+  <img width="420" alt="K-Means Confusion (Train)" src="src/Kmeans/kmeans_confusion_train.png" />
+  <img width="420" alt="K-Means Confusion (Test)"  src="src/Kmeans/kmeans_confusion_test.png" />
+</p>
+
+#### **Metrics from mapped cluster predictions**
+
+**Train**
+
+| Class | Precision | Recall | F1-Score | Support |
+|:-----:|:---------:|:------:|:--------:|-------:|
+| **0** | 0.6657 | 0.5259 | 0.5876 | 74,976 |
+| **1** | 0.6082 | 0.7359 | 0.6660 | 74,976 |
+| **Accuracy** |  |  | **0.6309** | 149,952 |
+
+**Test**
+
+| Class | Precision | Recall | F1-Score | Support |
+|:-----:|:---------:|:------:|:--------:|-------:|
+| **0** | 0.6643 | 0.5288 | 0.5888 | 24,992 |
+| **1** | 0.6086 | 0.7327 | 0.6649 | 24,992 |
+| **Accuracy** |  |  | **0.6307** | 49,984 |
+
+**Score AUC (Test, distance-based score):** `0.658`
+
+#### **Predicted-score histograms**
+
+<p>
+  <img width="420" alt="K-Means Score Histogram (Train)" src="src/Kmeans/kmeans_score_hist_train.png" />
+  <img width="420" alt="K-Means Score Histogram (Test)"  src="src/Kmeans/kmeans_score_hist_test.png" />
+</p>
+
+#### **Analysis**
+
+K-Means shows **some separation** (AUC ≈ 0.66) but substantial overlap between classes; mapped predictions yield Acc ≈ 0.63 / F1 ≈ 0.66. Useful as an **exploratory signal** or engineered feature (e.g., distance-based score), not as a standalone detector.
+
+#### **Artifacts**
+
+- `src/Kmeans/kmeans_on_augmented_train_split.csv`  
+- `src/Kmeans/kmeans_on_augmented_test_split.csv`  
+(Columns: `y`, `cluster`, `pred`, `score` ∈ [0,1])
+
+
 ## 5. References
 
 [1]	S. Pamulaparthyvenkata, M. Vishwanath, N. R. Desani, P. Murugesan, and D. Gottipalli, “Non Linear-Logistic Regression Analysis for AI-Driven Medicare Fraud Detection,” International Conference on Distributed Systems, Computer Networks and Cybersecurity, ICDSCNC 2024, 2024, doi: 10.1109/ICDSCNC62492.2024.10939147.
