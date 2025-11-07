@@ -153,7 +153,7 @@ To separate fraud from non fraud we set k=2 and evaluate how K Means performs on
 | Macro Avg | 0.6369 | 0.6309 | 0.6268 | 149,952 |
 | Weighted Avg | 0.6369 | 0.6309 | 0.6268 | 149,952 |
 
-<img alt="Confusion Matrix K Means Train" src="results/kmeans_confusion_train.png" width="520"/>
+<img alt="Confusion Matrix K Means Train" src="results/Kmeans/kmeans_confusion_train.png" width="520"/>
 
 #### [RESULTS] K Means ⇒ Majority Label (Test)
 
@@ -165,7 +165,7 @@ To separate fraud from non fraud we set k=2 and evaluate how K Means performs on
 | Macro Avg | 0.6365 | 0.6308 | 0.6269 | 49,984 |
 | Weighted Avg | 0.6365 | 0.6308 | 0.6269 | 49,984 |
 
-<img alt="Confusion Matrix K Means Test" src="results/kmeans_confusion_test.png" width="520"/>
+<img alt="Confusion Matrix K Means Test" src="results/Kmeans/kmeans_confusion_test.png" width="520"/>
 
 Train and test behave similarly, so the unsupervised pipeline does not appear to overfit. In both splits the fraud class has recall about 0.73 and precision about 0.61. This means many frauds are caught with more false alarms. False negatives are lower. Overall accuracy is about 0.631.
 
@@ -175,8 +175,8 @@ Train and test behave similarly, so the unsupervised pipeline does not appear to
 
 We convert distance to centroid into a normalized fraud score in [0,1]. Larger values indicate more anomalous behavior. The histograms show that frauds shift toward higher anomaly scores, but there is still large overlap, which explains moderate precision at high recall.
 
-<img alt="Predicted Scores K Means Train" src="results/kmeans_score_hist_train.png" width="520"/>
-<img alt="Predicted Scores K Means Test"  src="results/kmeans_score_hist_test.png"  width="520"/>
+<img alt="Predicted Scores K Means Train" src="results/Kmeans/kmeans_score_hist_train.png" width="520"/>
+<img alt="Predicted Scores K Means Test"  src="results/Kmeans/kmeans_score_hist_test.png"  width="520"/>
 
 ---
 
@@ -184,7 +184,7 @@ We convert distance to centroid into a normalized fraud score in [0,1]. Larger v
 
 We report Silhouette (↑), Calinski–Harabasz (↑), Davies–Bouldin (↓), and BetaCV (↓) on standardized features for train and test. All metrics are plotted on one linear axis.
 
-<img alt="K Means Internal Metrics" src="results/kmeans_internal_metrics_linear_single.png" width="820"/>
+<img alt="K Means Internal Metrics" src="results/Kmeans/kmeans_internal_metrics_linear_single.png" width="820"/>
 
 ---
 
