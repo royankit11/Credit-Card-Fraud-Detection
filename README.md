@@ -139,60 +139,62 @@ For a more in depth look at the code generating these images, look into the logi
 
 ### 4.5 K-Means (Unsupervised) Results and Analysis
 
-We use K-Means (k=2) on the standardized numeric features in `augmented_processed.csv`. Because K-Means is label-free, we first fit on the train split, then map each cluster to a class (`isFraud=0/1`) by *majority vote on the training labels*. This yields a deterministic cluster→label mapping that we apply to both train and test predictions. We then report standard classification metrics on each split and show confusion matrices to visualize false positives (0→1) and false negatives (1→0).
+To separate fraud from non fraud we set k=2 and evaluate how K Means performs on the engineered features in Section 3.1. To avoid overwhelming the clustering with very high dimensional signals, we exclude the electronic footprint features V1–V339. After feature engineering the data were imbalanced at about 10:1 non fraud to fraud, so we applied data augmentation to balance the train and test splits. Because K Means is label free, we fit on the train split, map clusters to classes (isFraud ∈ {0,1}) by majority vote on the training labels, and apply that mapping to both splits. The findings for training and testing are reported below.
 
 ---
 
-#### **[RESULTS] K-Means ⇒ Majority-Label (Train)**
+#### [RESULTS] K Means ⇒ Majority Label (Train)
 
 | Class | Precision | Recall | F1-Score | Support |
 |:--|:--:|:--:|:--:|--:|
-| **0 (Non-fraud)** | **0.6657** | 0.5259 | 0.5876 | 74,976 |
-| **1 (Fraud)**     | 0.6082 | **0.7359** | 0.6660 | 74,976 |
-| **Accuracy** |  |  | **0.6309** | 149,952 |
-| **Macro Avg** | 0.6369 | 0.6309 | 0.6268 | 149,952 |
-| **Weighted Avg** | 0.6369 | 0.6309 | 0.6268 | 149,952 |
+| 0 (Non fraud) | 0.6657 | 0.5259 | 0.5876 | 74,976 |
+| 1 (Fraud)     | 0.6082 | 0.7359 | 0.6660 | 74,976 |
+| Accuracy |  |  | 0.6309 | 149,952 |
+| Macro Avg | 0.6369 | 0.6309 | 0.6268 | 149,952 |
+| Weighted Avg | 0.6369 | 0.6309 | 0.6268 | 149,952 |
 
+<img alt="Confusion Matrix K Means Train" src="results/kmeans_confusion_train.png" width="520"/>
 
-<img alt="Confusion Matrix — K-Means (Train)" src="src/Kmeans/kmeans_confusion_train.png" width="520"/>
-
-
-
-#### **[RESULTS] K-Means ⇒ Majority-Label (Test)**
+#### [RESULTS] K Means ⇒ Majority Label (Test)
 
 | Class | Precision | Recall | F1-Score | Support |
 |:--|:--:|:--:|:--:|--:|
-| **0 (Non-fraud)** | **0.6643** | 0.5288 | 0.5888 | 24,992 |
-| **1 (Fraud)**     | 0.6086 | 0.7327 | 0.6649 | 24,992 |
-| **Accuracy** |  |  | **0.6308** | 49,984 |
-| **Macro Avg** | 0.6365 | 0.6308 | 0.6269 | 49,984 |
-| **Weighted Avg** | 0.6365 | 0.6308 | 0.6269 | 49,984 |
+| 0 (Non fraud) | 0.6643 | 0.5288 | 0.5888 | 24,992 |
+| 1 (Fraud)     | 0.6086 | 0.7327 | 0.6649 | 24,992 |
+| Accuracy |  |  | 0.6308 | 49,984 |
+| Macro Avg | 0.6365 | 0.6308 | 0.6269 | 49,984 |
+| Weighted Avg | 0.6365 | 0.6308 | 0.6269 | 49,984 |
 
+<img alt="Confusion Matrix K Means Test" src="results/kmeans_confusion_test.png" width="520"/>
 
-<img alt="Confusion Matrix — K-Means (Test)" src="src/Kmeans/kmeans_confusion_test.png" width="520"/>
-
-
-
-Train and test behave similarly, so the unsupervised pipeline does not appear to overfit. In both splits the fraud class has recall ~0.73 and precision ~0.61, which means many frauds are caught but with more false alarms (FP train 35,543, test 11,776), while false negatives are lower (FN train 19,804, test 6,680). Overall accuracy is ~0.631. Taken together, K Means is a reasonable unsupervised baseline that favors recall over precision and is best used as an upstream filter or within a hybrid pipeline.
+Train and test behave similarly, so the unsupervised pipeline does not appear to overfit. In both splits the fraud class has recall about 0.73 and precision about 0.61. This means many frauds are caught with more false alarms. False negatives are lower. Overall accuracy is about 0.631.
 
 ---
 
-#### Precision: Recall behavior (score distributions)
+#### Precision and recall behavior (score distributions)
 
-To visualize how the unsupervised score separates classes, we convert the distance to the assigned centroid into a normalized fraud score in \[0,1] (larger ≈ more anomalous; exact formula documented in the code). The histograms below show that frauds tend to shift toward higher anomaly scores, but there is still large overlap—explaining the moderate precision at high recall.
+We convert distance to centroid into a normalized fraud score in [0,1]. Larger values indicate more anomalous behavior. The histograms show that frauds shift toward higher anomaly scores, but there is still large overlap, which explains moderate precision at high recall.
 
-<img alt="Predicted Scores — K-Means (Train)" src="src/Kmeans/kmeans_score_hist_train.png" width="520"/>
-<img alt="Predicted Scores — K-Means (Test)"  src="src/Kmeans/kmeans_score_hist_test.png"  width="520"/>
+<img alt="Predicted Scores K Means Train" src="results/kmeans_score_hist_train.png" width="520"/>
+<img alt="Predicted Scores K Means Test"  src="results/kmeans_score_hist_test.png"  width="520"/>
+
+---
+
+#### Internal cluster quality measures (label free)
+
+We report Silhouette (↑), Calinski–Harabasz (↑), Davies–Bouldin (↓), and BetaCV (↓) on standardized features for train and test. All metrics are plotted on one linear axis.
+
+<img alt="K Means Internal Metrics" src="results/kmeans_internal_metrics_linear_single.png" width="820"/>
 
 ---
 
 #### Analysis
 
-K Means trains without labels and, after majority vote mapping, delivers about 0.63 accuracy with fraud recall near 0.73 and precision near 0.61 on both train and test. The confusion matrices and score histograms show partial separation with substantial overlap, so many non fraud samples fall into the fraud mapped cluster and fewer frauds are missed, which points to overlap rather than class skew. Taken together, K Means is best used as a feature generator and early filter rather than a standalone detector.
+K Means did not work fine in this setting. It is a centroid based method that best separates roughly circular or spherical clusters. Our data likely have a more complex and non spherical distribution. This explains the higher false positives and false negatives seen in the confusion matrices and the internal measures. Silhouette is low, DB and BetaCV are higher, and CH is only modest. These patterns indicate overlapping clusters rather than clean separation. K Means should be used as a baseline or as a feature generator and early filter, not as a standalone fraud detector.
 
-#### Next Steps
+#### Next steps
 
-We will test k > 2 with multiple k-means++ restarts and keep settings that are stable across resamples (ARI, NMI) and improve majority-vote precision/recall. We’ll ablate features (transaction vs device/identity) and try PCA or UMAP before clustering, then benchmark GMM, DBSCAN/HDBSCAN, Isolation Forest, and LOF. We’ll also feed the distance-to-centroid score into the supervised model and, when used alone, calibrate a threshold to lift recall at a controlled false-positive rate. Finally, we’ll monitor centroid drift, silhouette/WCSS, and score calibration over time to catch distribution shift and trigger reclustering or recalibration as needed.
+We will test k greater than 2 with stable k means++ restarts and sanity checks across resamples such as ARI and NMI. We will try dimensionality reduction such as PCA or UMAP before clustering. We will also evaluate Gaussian Mixture Models and DBSCAN or HDBSCAN to capture non spherical structure. Finally, we will feed distance to centroid scores into the supervised model and calibrate thresholds to control the false positive rate while monitoring centroid drift and internal measures over time.
 
 ## 5. References
 
