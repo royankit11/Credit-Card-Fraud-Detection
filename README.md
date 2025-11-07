@@ -137,70 +137,78 @@ Given the state of our model, there are a few steps we can take to look to impro
 
 For a more in depth look at the code generating these images, look into the logistic_regression_analysis notebook file. 
 
-### 4.5 K-Means (Unsupervised) — Results and Analysis
+### 4.5 K-Means (Unsupervised) Results and Analysis
 
-We apply **K-Means (k = 2)** to `augmented_processed.csv` as an unsupervised baseline.  
-Config: `seed = 10`, `test_size = 0.25`, model fit on a **20,000** subsample of the train split; features are median-imputed and standardized.  
-Clusters are mapped to labels {0,1} by **majority vote on the train split**. We also compute a distance-based **fraud score** in `[0,1]`.
+For our unsupervised baseline, we cluster transactions with **K-Means** and then **map clusters to labels** via a **train-split majority vote** (cluster → `isFraud` that appears most inside the cluster). This lets us evaluate clustering quality with standard classification metrics on both the train and test splits, while keeping the learning phase label-free.
 
-#### **Confusion Matrices**
+**Config.** `k = 2`, `seed = 10`, `test_size = 0.25`, subsample for quick iteration = `20,000` (same class ratio as the full set). All numeric features are standardized; high-cardinality categoricals are encoded to numeric; we use only columns present after the team’s cleaning pass.
 
-**Train**
+#### Clustering diagnostics (no labels during fit)
 
-|        | Pred 0 | Pred 1 |
-|:-------|-------:|-------:|
-| **True 0** | 39,433 | 35,543 |
-| **True 1** | 19,804 | 55,172 |
+We additionally compute standard clustering diagnostics to check whether K-Means finds meaningful structure independent of labels. **External** (label-aware, evaluated *after* mapping only for interpretation): Adjusted Rand Index (ARI), Normalized Mutual Information (NMI), homogeneity, completeness, V-measure. **Internal** (label-free): Silhouette score, Davies–Bouldin index, and Calinski–Harabasz index. In our runs these indicate **weak but non-zero alignment** with the fraud label and **modest separation/compactness**—consistent with the known difficulty of fraud being a minority, drifting target. (Exact values are logged by the script when you run it; see console output.)
 
-**Test**
+---
 
-|        | Pred 0 | Pred 1 |
-|:-------|-------:|-------:|
-| **True 0** | 13,216 | 11,776 |
-| **True 1** | 6,680  | 18,312 |
-
-<p>
-  <img width="420" alt="K-Means Confusion (Train)" src="src/Kmeans/kmeans_confusion_train.png" />
-  <img width="420" alt="K-Means Confusion (Test)"  src="src/Kmeans/kmeans_confusion_test.png" />
-</p>
-
-#### **Metrics from mapped cluster predictions**
-
-**Train**
+#### **[RESULTS] K-Means ⇒ Majority-Label (Train)**
 
 | Class | Precision | Recall | F1-Score | Support |
-|:-----:|:---------:|:------:|:--------:|-------:|
-| **0** | 0.6657 | 0.5259 | 0.5876 | 74,976 |
-| **1** | 0.6082 | 0.7359 | 0.6660 | 74,976 |
+|:--|:--:|:--:|:--:|--:|
+| **0 (Non-fraud)** | **0.6657** | 0.5259 | 0.5876 | 74,976 |
+| **1 (Fraud)**     | 0.6082 | **0.7359** | 0.6660 | 74,976 |
 | **Accuracy** |  |  | **0.6309** | 149,952 |
+| **Macro Avg** | 0.6369 | 0.6309 | 0.6268 | 149,952 |
+| **Weighted Avg** | 0.6369 | 0.6309 | 0.6268 | 149,952 |
 
-**Test**
+**Confusion Matrix — Train**
+
+<img alt="Confusion Matrix — K-Means (Train)" src="src/Kmeans/kmeans_confusion_train.png" width="520"/>
+
+---
+
+#### **[RESULTS] K-Means ⇒ Majority-Label (Test)**
 
 | Class | Precision | Recall | F1-Score | Support |
-|:-----:|:---------:|:------:|:--------:|-------:|
-| **0** | 0.6643 | 0.5288 | 0.5888 | 24,992 |
-| **1** | 0.6086 | 0.7327 | 0.6649 | 24,992 |
-| **Accuracy** |  |  | **0.6307** | 49,984 |
+|:--|:--:|:--:|:--:|--:|
+| **0 (Non-fraud)** | **0.6643** | 0.5288 | 0.5888 | 24,992 |
+| **1 (Fraud)**     | 0.6086 | 0.7327 | 0.6649 | 24,992 |
+| **Accuracy** |  |  | **0.6308** | 49,984 |
+| **Macro Avg** | 0.6365 | 0.6308 | 0.6269 | 49,984 |
+| **Weighted Avg** | 0.6365 | 0.6308 | 0.6269 | 49,984 |
 
-**Score AUC (Test, distance-based score):** `0.658`
+**Confusion Matrix — Test**
 
-#### **Predicted-score histograms**
+<img alt="Confusion Matrix — K-Means (Test)" src="src/Kmeans/kmeans_confusion_test.png" width="520"/>
 
-<p>
-  <img width="420" alt="K-Means Score Histogram (Train)" src="src/Kmeans/kmeans_score_hist_train.png" />
-  <img width="420" alt="K-Means Score Histogram (Test)"  src="src/Kmeans/kmeans_score_hist_test.png" />
-</p>
+---
 
-#### **Analysis**
+#### Precision–Recall behavior (score distributions)
 
-K-Means shows **some separation** (AUC ≈ 0.66) but substantial overlap between classes; mapped predictions yield Acc ≈ 0.63 / F1 ≈ 0.66. Useful as an **exploratory signal** or engineered feature (e.g., distance-based score), not as a standalone detector.
+To visualize how the unsupervised score separates classes, we convert the **distance to the assigned centroid** into a **normalized fraud score** in \[0,1] (larger ≈ more anomalous; exact formula documented in the code). The histograms below show that frauds tend to shift toward higher anomaly scores, but there is still large overlap—explaining the moderate precision at high recall.
 
-#### **Artifacts**
+<img alt="Predicted Scores — K-Means (Train)" src="src/Kmeans/kmeans_score_hist_train.png" width="520"/>
+<img alt="Predicted Scores — K-Means (Test)"  src="src/Kmeans/kmeans_score_hist_test.png"  width="520"/>
 
-- `src/Kmeans/kmeans_on_augmented_train_split.csv`  
-- `src/Kmeans/kmeans_on_augmented_test_split.csv`  
-(Columns: `y`, `cluster`, `pred`, `score` ∈ [0,1])
+---
 
+#### Analysis
+
+Unlike the supervised logistic-regression models in §4.4, K-Means never sees labels during training. After mapping clusters by majority vote, performance lands around **63% accuracy** with **recall for fraud ≈ 0.73** and **precision ≈ 0.61** on both train and test, which is expected for a simple 2-centroid partition of high-dimensional, highly imbalanced data. The confusion matrices show many non-fraud samples grouped with the fraud-leaning cluster (precision loss), while a meaningful portion of fraud is still captured (recall > 0.7). The score histograms confirm **partial separation with heavy overlap**, consistent with the diagnostics that suggest limited cluster structure aligned with the fraud label.
+
+These results are useful as an **unsupervised baseline**: (i) they provide label-free triage when labels are missing or delayed; (ii) they supply features such as **cluster ID** and **distance-based score** that can be stacked with supervised models; and (iii) they help detect drift when the label distribution or behavior changes.
+
+#### Next Steps
+
+1) Explore **k > 2** and initialize with **k-means++ multiple restarts**; evaluate ARI/NMI and the downstream majority-vote metrics for stability.  
+2) Try **feature subsets** (transaction vs. device blocks) and **PCA/UMAP** projections before clustering to reduce noise.  
+3) Compare with **GMM** (soft assignments), **DBSCAN/HDBSCAN** (density-based anomalies), and **Isolation Forest/LOF** to better target rare patterns.  
+4) Use the K-Means **distance score** as an extra input to supervised models (stacking); in our setting a calibrated threshold on this score can raise recall at a controlled false-positive rate.  
+5) Monitor clustering diagnostics over time to catch distribution shift (cluster drift) in production.
+
+**Artifacts produced by the script (saved under `src/Kmeans/`):**
+- `kmeans_predictions_train.csv`, `kmeans_predictions_test.csv` – per-row `TransactionID`, assigned cluster, mapped label, and anomaly score.  
+- `kmeans_confusion_train.png`, `kmeans_confusion_test.png` – confusion matrices above.  
+- `kmeans_score_hist_train.png`, `kmeans_score_hist_test.png` – score histograms above.  
+- (Console) external/internal clustering metrics for quick sanity checks.
 
 ## 5. References
 
