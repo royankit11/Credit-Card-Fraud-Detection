@@ -139,7 +139,7 @@ For a more in depth look at the code generating these images, look into the logi
 
 ### 4.5 K-Means (Unsupervised) Results and Analysis
 
-We use **K-Means (k=2)** on the standardized numeric features in `augmented_processed.csv`. Because K-Means is label-free, we first **fit on the train split**, then **map each cluster to a class** (`isFraud=0/1`) by *majority vote on the training labels*. This yields a deterministic cluster→label mapping that we apply to both train and test predictions. We then report standard classification metrics on each split and show confusion matrices to visualize false positives (0→1) and false negatives (1→0).
+We use K-Means (k=2) on the standardized numeric features in `augmented_processed.csv`. Because K-Means is label-free, we first fit on the train split, then map each cluster to a class (`isFraud=0/1`) by *majority vote on the training labels*. This yields a deterministic cluster→label mapping that we apply to both train and test predictions. We then report standard classification metrics on each split and show confusion matrices to visualize false positives (0→1) and false negatives (1→0).
 
 ---
 
@@ -171,15 +171,15 @@ We use **K-Means (k=2)** on the standardized numeric features in `augmented_proc
 
 <img alt="Confusion Matrix — K-Means (Test)" src="src/Kmeans/kmeans_confusion_test.png" width="520"/>
 
+
+
+The train and test splits show nearly identical behavior, indicating the unsupervised pipeline is not overfitting. In both splits, the*fraud class (1) attains higher recall (~0.73) than precision (~0.61), which means the model catches most fraud but at the cost of more false alarms (e.g., 35,543 non-fraud labeled as fraud on train; 11,776 on test). Conversely, false negatives are lower (19,804 train; 6,680 test), aligning with a “catch-more-fraud” preference. Overall accuracy (~0.631) is modest—as expected for a label-agnostic method mapped via majority vote—but the stable metrics and confusion matrices suggest K-Means provides a reasonable unsupervised baseline that prioritizes recall of fraud over precision and can be useful as an upstream filter or as part of a hybrid pipeline.
+
 ---
 
-The train and test splits show nearly identical behavior, indicating the unsupervised pipeline is not overfitting. In both splits, the **fraud class (1)** attains **higher recall (~0.73)** than precision (~0.61), which means the model **catches most fraud** but at the cost of **more false alarms** (e.g., 35,543 non-fraud labeled as fraud on train; 11,776 on test). Conversely, false negatives are lower (19,804 train; 6,680 test), aligning with a “catch-more-fraud” preference. Overall accuracy (~0.631) is modest—as expected for a label-agnostic method mapped via majority vote—but the stable metrics and confusion matrices suggest K-Means provides a reasonable unsupervised baseline that prioritizes **recall of fraud** over precision and can be useful as an upstream filter or as part of a hybrid pipeline.
+#### Precision: Recall behavior (score distributions)
 
----
-
-#### Precision–Recall behavior (score distributions)
-
-To visualize how the unsupervised score separates classes, we convert the **distance to the assigned centroid** into a **normalized fraud score** in \[0,1] (larger ≈ more anomalous; exact formula documented in the code). The histograms below show that frauds tend to shift toward higher anomaly scores, but there is still large overlap—explaining the moderate precision at high recall.
+To visualize how the unsupervised score separates classes, we convert the distance to the assigned centroid into a normalized fraud score in \[0,1] (larger ≈ more anomalous; exact formula documented in the code). The histograms below show that frauds tend to shift toward higher anomaly scores, but there is still large overlap—explaining the moderate precision at high recall.
 
 <img alt="Predicted Scores — K-Means (Train)" src="src/Kmeans/kmeans_score_hist_train.png" width="520"/>
 <img alt="Predicted Scores — K-Means (Test)"  src="src/Kmeans/kmeans_score_hist_test.png"  width="520"/>
@@ -188,23 +188,13 @@ To visualize how the unsupervised score separates classes, we convert the **dist
 
 #### Analysis
 
-Unlike the supervised logistic-regression models in §4.4, K-Means never sees labels during training. After mapping clusters by majority vote, performance lands around **63% accuracy** with **recall for fraud ≈ 0.73** and **precision ≈ 0.61** on both train and test, which is expected for a simple 2-centroid partition of high-dimensional, highly imbalanced data. The confusion matrices show many non-fraud samples grouped with the fraud-leaning cluster (precision loss), while a meaningful portion of fraud is still captured (recall > 0.7). The score histograms confirm **partial separation with heavy overlap**, consistent with the diagnostics that suggest limited cluster structure aligned with the fraud label.
+Unlike the supervised logistic regression models in §4.4, K-Means never sees labels during training. After mapping clusters by majority vote, performance lands around 63% accuracy with recall for the fraud class near 0.73 and precision near 0.61 on both train and test, which is consistent with a simple two-centroid partition in high-dimensional space. Although fraud data are typically imbalanced, this particular evaluation split is balanced across classes, so the modest precision reflects cluster overlap rather than class skew. The confusion matrices show many non-fraud samples grouped with the fraud-mapped cluster, which explains the precision loss, while a meaningful portion of fraud is still captured. The score histograms confirm partial separation with heavy overlap, in line with diagnostics that indicate limited cluster structure aligned with the fraud label.
 
-These results are useful as an **unsupervised baseline**: (i) they provide label-free triage when labels are missing or delayed; (ii) they supply features such as **cluster ID** and **distance-based score** that can be stacked with supervised models; and (iii) they help detect drift when the label distribution or behavior changes.
+These results are useful as an unsupervised baseline: they provide label-free triage when labels are missing or delayed, they supply features such as the cluster identifier and a distance-based score that can be stacked with supervised models, and they offer a signal for drift detection when the label distribution or transaction behavior changes.
 
 #### Next Steps
 
-1) Explore **k > 2** and initialize with **k-means++ multiple restarts**; evaluate ARI/NMI and the downstream majority-vote metrics for stability.  
-2) Try **feature subsets** (transaction vs. device blocks) and **PCA/UMAP** projections before clustering to reduce noise.  
-3) Compare with **GMM** (soft assignments), **DBSCAN/HDBSCAN** (density-based anomalies), and **Isolation Forest/LOF** to better target rare patterns.  
-4) Use the K-Means **distance score** as an extra input to supervised models (stacking); in our setting a calibrated threshold on this score can raise recall at a controlled false-positive rate.  
-5) Monitor clustering diagnostics over time to catch distribution shift (cluster drift) in production.
-
-**Artifacts produced by the script (saved under `src/Kmeans/`):**
-- `kmeans_predictions_train.csv`, `kmeans_predictions_test.csv` – per-row `TransactionID`, assigned cluster, mapped label, and anomaly score.  
-- `kmeans_confusion_train.png`, `kmeans_confusion_test.png` – confusion matrices above.  
-- `kmeans_score_hist_train.png`, `kmeans_score_hist_test.png` – score histograms above.  
-- (Console) external/internal clustering metrics for quick sanity checks.
+We will test k > 2 with multiple k-means++ restarts and keep settings that are stable across resamples (ARI, NMI) and improve majority-vote precision/recall. We’ll ablate features (transaction vs device/identity) and try PCA or UMAP before clustering, then benchmark GMM, DBSCAN/HDBSCAN, Isolation Forest, and LOF. We’ll also feed the distance-to-centroid score into the supervised model and, when used alone, calibrate a threshold to lift recall at a controlled false-positive rate. Finally, we’ll monitor centroid drift, silhouette/WCSS, and score calibration over time to catch distribution shift and trigger reclustering or recalibration as needed.
 
 ## 5. References
 
