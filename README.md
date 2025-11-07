@@ -145,7 +145,7 @@ To separate fraud from non fraud we set k=2 and evaluate how K Means performs on
 
 #### [RESULTS] K Means ⇒ Majority Label (Train)
 
-| Class | Precision | Recall | F1-Score | Support |
+| Class | Precision | Recall | F1 Score | Support |
 |:--|:--:|:--:|:--:|--:|
 | 0 (Non fraud) | 0.6657 | 0.5259 | 0.5876 | 74,976 |
 | 1 (Fraud)     | 0.6082 | 0.7359 | 0.6660 | 74,976 |
@@ -153,11 +153,11 @@ To separate fraud from non fraud we set k=2 and evaluate how K Means performs on
 | Macro Avg | 0.6369 | 0.6309 | 0.6268 | 149,952 |
 | Weighted Avg | 0.6369 | 0.6309 | 0.6268 | 149,952 |
 
-<img alt="Confusion Matrix K Means Train" src="results/Kmeans/kmeans_confusion_train.png" width="520"/>
+<img alt="Confusion Matrix K Means Train" src="src/Kmeans/kmeans_confusion_train.png" width="520"/>
 
 #### [RESULTS] K Means ⇒ Majority Label (Test)
 
-| Class | Precision | Recall | F1-Score | Support |
+| Class | Precision | Recall | F1 Score | Support |
 |:--|:--:|:--:|:--:|--:|
 | 0 (Non fraud) | 0.6643 | 0.5288 | 0.5888 | 24,992 |
 | 1 (Fraud)     | 0.6086 | 0.7327 | 0.6649 | 24,992 |
@@ -165,7 +165,7 @@ To separate fraud from non fraud we set k=2 and evaluate how K Means performs on
 | Macro Avg | 0.6365 | 0.6308 | 0.6269 | 49,984 |
 | Weighted Avg | 0.6365 | 0.6308 | 0.6269 | 49,984 |
 
-<img alt="Confusion Matrix K Means Test" src="results/Kmeans/kmeans_confusion_test.png" width="520"/>
+<img alt="Confusion Matrix K Means Test" src="src/Kmeans/kmeans_confusion_test.png" width="520"/>
 
 Train and test behave similarly, so the unsupervised pipeline does not appear to overfit. In both splits the fraud class has recall about 0.73 and precision about 0.61. This means many frauds are caught with more false alarms. False negatives are lower. Overall accuracy is about 0.631.
 
@@ -175,8 +175,8 @@ Train and test behave similarly, so the unsupervised pipeline does not appear to
 
 We convert distance to centroid into a normalized fraud score in [0,1]. Larger values indicate more anomalous behavior. The histograms show that frauds shift toward higher anomaly scores, but there is still large overlap, which explains moderate precision at high recall.
 
-<img alt="Predicted Scores K Means Train" src="results/Kmeans/kmeans_score_hist_train.png" width="520"/>
-<img alt="Predicted Scores K Means Test"  src="results/Kmeans/kmeans_score_hist_test.png"  width="520"/>
+<img alt="Predicted Scores K Means Train" src="src/Kmeans/kmeans_score_hist_train.png" width="520"/>
+<img alt="Predicted Scores K Means Test"  src="src/Kmeans/kmeans_score_hist_test.png"  width="520"/>
 
 ---
 
@@ -184,7 +184,7 @@ We convert distance to centroid into a normalized fraud score in [0,1]. Larger v
 
 We report Silhouette (↑), Calinski–Harabasz (↑), Davies–Bouldin (↓), and BetaCV (↓) on standardized features for train and test. All metrics are plotted on one linear axis.
 
-<img alt="K Means Internal Metrics" src="results/Kmeans/kmeans_internal_metrics_linear_single.png" width="820"/>
+<img alt="K Means Internal Metrics" src="src/Kmeans/kmeans_internal_metrics_linear_single.png" width="820"/>
 
 ---
 
@@ -195,6 +195,7 @@ K Means did not work fine in this setting. It is a centroid based method that be
 #### Next steps
 
 We will test k greater than 2 with stable k means++ restarts and sanity checks across resamples such as ARI and NMI. We will try dimensionality reduction such as PCA or UMAP before clustering. We will also evaluate Gaussian Mixture Models and DBSCAN or HDBSCAN to capture non spherical structure. Finally, we will feed distance to centroid scores into the supervised model and calibrate thresholds to control the false positive rate while monitoring centroid drift and internal measures over time.
+
 
 ## 5. References
 
