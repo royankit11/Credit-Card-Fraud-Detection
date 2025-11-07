@@ -139,13 +139,7 @@ For a more in depth look at the code generating these images, look into the logi
 
 ### 4.5 K-Means (Unsupervised) Results and Analysis
 
-For our unsupervised baseline, we cluster transactions with **K-Means** and then **map clusters to labels** via a **train-split majority vote** (cluster → `isFraud` that appears most inside the cluster). This lets us evaluate clustering quality with standard classification metrics on both the train and test splits, while keeping the learning phase label-free.
-
-**Config.** `k = 2`, `seed = 10`, `test_size = 0.25`, subsample for quick iteration = `20,000` (same class ratio as the full set). All numeric features are standardized; high-cardinality categoricals are encoded to numeric; we use only columns present after the team’s cleaning pass.
-
-#### Clustering diagnostics (no labels during fit)
-
-We additionally compute standard clustering diagnostics to check whether K-Means finds meaningful structure independent of labels. **External** (label-aware, evaluated *after* mapping only for interpretation): Adjusted Rand Index (ARI), Normalized Mutual Information (NMI), homogeneity, completeness, V-measure. **Internal** (label-free): Silhouette score, Davies–Bouldin index, and Calinski–Harabasz index. In our runs these indicate **weak but non-zero alignment** with the fraud label and **modest separation/compactness**—consistent with the known difficulty of fraud being a minority, drifting target. (Exact values are logged by the script when you run it; see console output.)
+We train a 2-cluster K-Means model on the **training split only** of `augmented_processed.csv`, using a **stratified train–test split with a fixed seed** to preserve the fraud ratio and prevent leakage; all numeric features are **standardized**, and the target `isFraud` (and any known leakage columns) is excluded. K-Means uses **k-means++** initialization with multiple restarts and, for speed in high dimension, is **fit on a 20,000-row stratified subsample of the train split**; the learned centroids are then **applied to both train and test without refitting**. To obtain class predictions from the label-free clusters, we compute the **majority label per cluster on the train split**, map the higher-fraud cluster to class 1 (“fraud”) and the other to class 0, and **freeze this mapping** before evaluating on the test split. Alongside these hard labels we compute a **distance-to-centroid anomaly score** for each row (monotonic with fraud risk, **min–max scaled to [0,1] for plots**) to support thresholding and visualization. For structure diagnostics we report **internal** indices on train (Silhouette, Davies–Bouldin, Calinski–Harabasz) and **external** agreement with `isFraud` (Adjusted Rand Index, Normalized Mutual Information, homogeneity/completeness/V-measure) after the mapping, which together summarize compactness/separation and alignment with the ground-truth labels. 
 
 ---
 
