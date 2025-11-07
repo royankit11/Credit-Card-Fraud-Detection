@@ -173,7 +173,7 @@ We use K-Means (k=2) on the standardized numeric features in `augmented_processe
 
 
 
-The train and test splits show nearly identical behavior, indicating the unsupervised pipeline is not overfitting. In both splits, the*fraud class (1) attains higher recall (~0.73) than precision (~0.61), which means the model catches most fraud but at the cost of more false alarms (e.g., 35,543 non-fraud labeled as fraud on train; 11,776 on test). Conversely, false negatives are lower (19,804 train; 6,680 test), aligning with a “catch-more-fraud” preference. Overall accuracy (~0.631) is modest—as expected for a label-agnostic method mapped via majority vote—but the stable metrics and confusion matrices suggest K-Means provides a reasonable unsupervised baseline that prioritizes recall of fraud over precision and can be useful as an upstream filter or as part of a hybrid pipeline.
+Train and test behave similarly, so the unsupervised pipeline does not appear to overfit. In both splits the fraud class has recall ~0.73 and precision ~0.61, which means many frauds are caught but with more false alarms (FP train 35,543, test 11,776), while false negatives are lower (FN train 19,804, test 6,680). Overall accuracy is ~0.631. Taken together, K Means is a reasonable unsupervised baseline that favors recall over precision and is best used as an upstream filter or within a hybrid pipeline.
 
 ---
 
@@ -188,9 +188,7 @@ To visualize how the unsupervised score separates classes, we convert the distan
 
 #### Analysis
 
-Unlike the supervised logistic regression models in §4.4, K-Means never sees labels during training. After mapping clusters by majority vote, performance lands around 63% accuracy with recall for the fraud class near 0.73 and precision near 0.61 on both train and test, which is consistent with a simple two-centroid partition in high-dimensional space. Although fraud data are typically imbalanced, this particular evaluation split is balanced across classes, so the modest precision reflects cluster overlap rather than class skew. The confusion matrices show many non-fraud samples grouped with the fraud-mapped cluster, which explains the precision loss, while a meaningful portion of fraud is still captured. The score histograms confirm partial separation with heavy overlap, in line with diagnostics that indicate limited cluster structure aligned with the fraud label.
-
-These results are useful as an unsupervised baseline: they provide label-free triage when labels are missing or delayed, they supply features such as the cluster identifier and a distance-based score that can be stacked with supervised models, and they offer a signal for drift detection when the label distribution or transaction behavior changes.
+K Means trains without labels and, after majority vote mapping, delivers about 0.63 accuracy with fraud recall near 0.73 and precision near 0.61 on both train and test. The confusion matrices and score histograms show partial separation with substantial overlap, so many non fraud samples fall into the fraud mapped cluster and fewer frauds are missed, which points to overlap rather than class skew. Taken together, K Means is best used as a feature generator and early filter rather than a standalone detector.
 
 #### Next Steps
 
