@@ -139,7 +139,7 @@ For a more in depth look at the code generating these images, look into the logi
 
 ### 4.5 K-Means (Unsupervised) Results and Analysis
 
-We train a 2-cluster K-Means model on the **training split only** of `augmented_processed.csv`, using a **stratified train–test split with a fixed seed** to preserve the fraud ratio and prevent leakage; all numeric features are **standardized**, and the target `isFraud` (and any known leakage columns) is excluded. K-Means uses **k-means++** initialization with multiple restarts and, for speed in high dimension, is **fit on a 20,000-row stratified subsample of the train split**; the learned centroids are then **applied to both train and test without refitting**. To obtain class predictions from the label-free clusters, we compute the **majority label per cluster on the train split**, map the higher-fraud cluster to class 1 (“fraud”) and the other to class 0, and **freeze this mapping** before evaluating on the test split. Alongside these hard labels we compute a **distance-to-centroid anomaly score** for each row (monotonic with fraud risk, **min–max scaled to [0,1] for plots**) to support thresholding and visualization. For structure diagnostics we report **internal** indices on train (Silhouette, Davies–Bouldin, Calinski–Harabasz) and **external** agreement with `isFraud` (Adjusted Rand Index, Normalized Mutual Information, homogeneity/completeness/V-measure) after the mapping, which together summarize compactness/separation and alignment with the ground-truth labels. 
+We use **K-Means (k=2)** on the standardized numeric features in `augmented_processed.csv`. Because K-Means is label-free, we first **fit on the train split**, then **map each cluster to a class** (`isFraud=0/1`) by *majority vote on the training labels*. This yields a deterministic cluster→label mapping that we apply to both train and test predictions. We then report standard classification metrics on each split and show confusion matrices to visualize false positives (0→1) and false negatives (1→0).
 
 ---
 
@@ -172,6 +172,8 @@ We train a 2-cluster K-Means model on the **training split only** of `augmented_
 <img alt="Confusion Matrix — K-Means (Test)" src="src/Kmeans/kmeans_confusion_test.png" width="520"/>
 
 ---
+
+The train and test splits show nearly identical behavior, indicating the unsupervised pipeline is not overfitting. In both splits, the **fraud class (1)** attains **higher recall (~0.73)** than precision (~0.61), which means the model **catches most fraud** but at the cost of **more false alarms** (e.g., 35,543 non-fraud labeled as fraud on train; 11,776 on test). Conversely, false negatives are lower (19,804 train; 6,680 test), aligning with a “catch-more-fraud” preference. Overall accuracy (~0.631) is modest—as expected for a label-agnostic method mapped via majority vote—but the stable metrics and confusion matrices suggest K-Means provides a reasonable unsupervised baseline that prioritizes **recall of fraud** over precision and can be useful as an upstream filter or as part of a hybrid pipeline.
 
 #### Precision–Recall behavior (score distributions)
 
