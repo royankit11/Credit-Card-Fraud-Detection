@@ -226,6 +226,11 @@ We will test k greater than 2 with stable k means++ restarts and sanity checks a
 /src/preprocess.py: Implements preprocessing with PCA \
 /src/logistic_regression_fraud.py: Implements the logistic regression model \
 /src/logistic_regression_analysis.ipynb: Evaluates and presents visualizations for logistic regression \
+/src/Kmeans/: All code and data for Kmeans implementation \
+/src/Kmeans/Augmentation.py: Balances the dataset by oversampling the minority fraud class \
+/src/Kmeans/clean_data.py: Preprocesses and one-hot encodes test data \
+/src/Kmeans/k-means.py: Implements K-means model \
+/src/Kmeans/kmeans_augmented.py: Runs a command-line K-Means clustering pipeline \
 /models/: Stores all the implemented ML models \
 /models/logreg_lightweight.pkl: Logistic regression model on the non-PCA dataset \
 /models/logreg_pca.pkl: Logistic regression model on the PCA dataset
