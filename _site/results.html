@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Results | Credit Card Fraud Detection</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="Results" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/results.html" />
+<meta property="og:url" content="http://localhost:4000/results.html" />
+<meta property="og:site_name" content="Credit Card Fraud Detection" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Results" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","headline":"Results","url":"http://localhost:4000/results.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Credit Card Fraud Detection" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Credit Card Fraud Detection</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/">Home</a><a class="page-link" href="/problem.html">Problem</a><a class="page-link" href="/methods.html">Methods</a><a class="page-link" href="/results.html">Results</a><a class="page-link" href="/references.html">References</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Results</h1>
+  </header>
+
+  <div class="post-content">
+    <h3 id="41-quantitive-metrics">4.1 Quantitive Metrics</h3>
+
+<p>For this project, we’ll be using several metrics to evaluate our models. We focus on precision, recall, and F1-score, since precision shows how many flagged cases are true fraud, while recall measures coverage of actual fraud cases. F1 balances the two. Finally, the ROC-AUC curve will show how the true positive rate varies with the false positive rate across different thresholds, helping us assess the model’s overall discriminative power and robustness.</p>
+
+<h3 id="42-project-goals">4.2 Project Goals</h3>
+
+<p>The objective is to maximize recall while maintaining strong overall classification performance. A practical target is recall above 95% with precision around 90–95%. While perfect recall and precision are unlikely, a strong F1-score (&gt;0.92) indicates good balance. An ROC-AUC in the 0.8–0.9 range would confirm solid discriminative ability across thresholds. Beyond metrics, the system should remain fair across customer groups, respect privacy constraints, and operate efficiently in real time.</p>
+
+<h3 id="43-expected-results">4.3 Expected Results</h3>
+
+<p>We expect Random Forests and Gradient Boosting to deliver strong results, with recall and precision in the 90–95% range. F1-scores will likely land between 0.92 and 0.94, reflecting strong balance. ROC-AUC is expected in the 0.8–0.9 range, indicating robust discriminative ability across thresholds. While the exact targets (e.g., 99% recall) may not be reached, the models should still provide a powerful fraud detection tool that significantly reduces fraud while minimizing disruptions.</p>
+
+<h3 id="44-logistic-regression-results-and-analysis">4.4 Logistic Regression Results and Analysis</h3>
+
+<p>For our supervised model, we created a logistic regression model, outputting the probability a given transaction is fraudulent. We created two major models, one using the features from the original dataset, and one with the features from our PCA algorithm. Their results are below:</p>
+
+<h4 id="regression-on-original-features"><strong>Regression on Original Features</strong></h4>
+
+<p><strong>[RESULTS] Logistic Regression (Lightweight)</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Class</th>
+      <th style="text-align: center">Precision</th>
+      <th style="text-align: center">Recall</th>
+      <th style="text-align: center">F1-Score</th>
+      <th style="text-align: center">Support</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>0</strong></td>
+      <td style="text-align: center">0.9886</td>
+      <td style="text-align: center">0.8316</td>
+      <td style="text-align: center">0.9033</td>
+      <td style="text-align: center">113,975</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>1</strong></td>
+      <td style="text-align: center">0.1366</td>
+      <td style="text-align: center">0.7346</td>
+      <td style="text-align: center">0.2304</td>
+      <td style="text-align: center">4,133</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Accuracy</strong></td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"><strong>0.8283</strong></td>
+      <td style="text-align: center">118,108</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Macro Avg</strong></td>
+      <td style="text-align: center">0.5626</td>
+      <td style="text-align: center">0.7831</td>
+      <td style="text-align: center">0.5669</td>
+      <td style="text-align: center">118,108</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Weighted Avg</strong></td>
+      <td style="text-align: center">0.9587</td>
+      <td style="text-align: center">0.8283</td>
+      <td style="text-align: center">0.8798</td>
+      <td style="text-align: center">118,108</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>ROC AUC:</strong> <code class="language-plaintext highlighter-rouge">0.8639</code></p>
+
+<h4 id="regression-on-pca-features"><strong>Regression on PCA Features</strong></h4>
+
+<p><strong>[RESULTS] Logistic Regression on PCA Features</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Class</th>
+      <th style="text-align: center">Precision</th>
+      <th style="text-align: center">Recall</th>
+      <th style="text-align: center">F1-Score</th>
+      <th style="text-align: center">Support</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>0</strong></td>
+      <td style="text-align: center">0.9855</td>
+      <td style="text-align: center">0.7598</td>
+      <td style="text-align: center">0.8581</td>
+      <td style="text-align: center">113,975</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>1</strong></td>
+      <td style="text-align: center">0.0947</td>
+      <td style="text-align: center">0.6925</td>
+      <td style="text-align: center">0.1666</td>
+      <td style="text-align: center">4,133</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Accuracy</strong></td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"><strong>0.7575</strong></td>
+      <td style="text-align: center">118,108</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Macro Avg</strong></td>
+      <td style="text-align: center">0.5401</td>
+      <td style="text-align: center">0.7262</td>
+      <td style="text-align: center">0.5123</td>
+      <td style="text-align: center">118,108</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Weighted Avg</strong></td>
+      <td style="text-align: center">0.9544</td>
+      <td style="text-align: center">0.7575</td>
+      <td style="text-align: center">0.8339</td>
+      <td style="text-align: center">118,108</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>ROC AUC:</strong> <code class="language-plaintext highlighter-rouge">0.8027</code></p>
+
+<p>From the above statements we are able to learn a lot about how our 2 models performed. For starters, the ROC AUC is a summary metric, telling us how well our model does in general, amongst the entire data set. From this, we see our model that uses the PCA features generates more error than the model that is trained on the original features. This tells us we need to look further into our PCA algorithm, or maybe that we should not be performing PCA, and each feature in the dataset is valuable.</p>
+
+<p><img width="1054" alt="Logistic Regression Confusion Matrices" src="assets/LR_CM.png" /></p>
+
+<p>The above graphs show a confusion matrix of each of our models, showing how the model predicted fraudulent and nonfraudulent transactions. For the majority of data points, the model behaved well. However, out of roughly 118,000 transactions, the model let 1,097 and 1,271 fraudulent transactions through ourmodel that used the original features and our PCA features, respectively. This equates to roughly 0.01% of all of our transactions making it past our model and turn out to be fraudulent. Depending on the real world implications, or company we decided to work with for this problem, we could tweak this number to better serve client needs.</p>
+
+<p><img width="462" alt="Logistic Regression Precision Recall Curve" src="assets/LR_PR.png" /></p>
+
+<p>The above graph is a precision recall curve, plotting the recall values (fraction of actual fraudulent transactions being detected) against the precision values (fraction of predicted frauds that are truly fraud). It shows what the precision values are for all of the different recall values. The AP value stands for average precision, which is mathematically calculated as the area under the curve, but conceptually it represents how precise our model is, while we try to catch more and more fraudulent transactions. The lower AP in our PCA curve tells us that when we try to increase the number of fraudulent transactions caught, this will also increase the number of false positives, which in our scenario could be very costly. A transaction labeled as fraud when it is not, could result in many unhappy customers, frustrated that their transactions are not going through.</p>
+
+<p>The graph above is going to be very helpful in helping us continue to check the number of false positives as we continue to increase the number of fraudulent transactions flagged. As we continue to tweak our model, we will continue to review this chart, and hope to improve our AP scores. An AP score of 0.43 on our orignial model is not terrible given the dataset and the small number of fraudulent transactions we have to work with, yet we still want to improve that number to around 0.6 to ensure we increase correct fraudulent labels.</p>
+
+<table>
+  <tr>
+    <td><img width="400" alt="Logistic Regression Predicted Probabilities Original" src="assets/LR_PP1.png" /></td>
+    <td><img width="400" alt="Logistic Regression Predicted Probabilities PCA" src="assets/LR_PP2.png" /></td>
+  </tr>
+  <tr>
+    <td align="center">Original Features</td>
+    <td align="center">PCA Features</td>
+  </tr>
+</table>
+
+<p>The above chart is a histogram, showing the distribution of fraudulent and non fraudulent transactions in the dataset, as well as their predicted probability of how likley the transaction was fraudulent. Given the above graph we first see the count in true fraudulent transactions arise around a probability of 0.1, and increase around 0.4. For our first logistic regression model, we chose a simple threshold of 0.5 to determine what transactions would be classified as fraudulent or not. In a real world scenario, we would likely lower that threshold as we want less fraud to be getting through our model. Fraudulent transactions result in huge losses to customers, so it would be better for a bank or financial institution to flag more activity as fraud in order to avoid as much fraud as possible.</p>
+
+<h4 id="analysis">Analysis</h4>
+
+<p>Given the above visualization on our model, our model provides adequate results to generate a baseline result for predicting fraudulent transactions or not. By using our threshold of 0.50 on our logistic regression model, almost a quarter of the fraudulent transactions are getting through our model and labeled as not fraud. This is definelty an area of our model that needs improvement. While the dataset only has around 4,000 fraudulent transactions available to us to train on, we still wish to stop more fraudulent transactions, and plan to work on this throughout the semester.</p>
+
+<h4 id="next-steps">Next Steps</h4>
+
+<p>Given the state of our model, there are a few steps we can take to look to improve our model. For starters, as mentioned previously we selected a simple 50% threshold to classify a transaction as fraud. While for most scenarios this may be the best value to choose, for this scenario we may want to lower the threshold to classify more variables as fraudulent. Most banks and financial institutions want to ensure they stop as much fraud as possible. For our model, this may come at the cost of mislabeling transactions as fraudulent when they are not, but as a whole we would get fewer false negatives, and would save bank customers lots of money and stress from being fraud victims. We will begin expierementing with this number, to try to reduce the total number of fraudulent transactions getting ‘past’ the model. Aside from the threshold, we can reexamine our PCA analysis, as the overall accuracy of the model decreased by training on PCA. While this is typical in PCA, we will expierement with getting more features from PCA, and seeing how our accuracy changes. Given we are just running the model locally, we can test adding more PCA features, even though it will increase the model’s execution power.</p>
+
+<p>For a more in depth look at the code generating these images, look into the logistic_regression_analysis notebook file.</p>
+
+<h3 id="45-neural-network-supervised-results-and-analysis">4.5 Neural Network (Supervised) Results and Analysis</h3>
+
+<p>To make a more advanced supervised model, we architected a neural network, called FraudNet. We created two major models, one using the features from the original dataset, and one with the features from our PCA algorithm. Their results are below:</p>
+
+<p><strong>[RESULTS] FraudNet (Full Model)</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Class</th>
+      <th style="text-align: center">Precision</th>
+      <th style="text-align: center">Recall</th>
+      <th style="text-align: center">F1-Score</th>
+      <th style="text-align: center">Support</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>0</strong></td>
+      <td style="text-align: center">0.9909</td>
+      <td style="text-align: center">0.8608</td>
+      <td style="text-align: center">0.9213</td>
+      <td style="text-align: center">113,975</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>1</strong></td>
+      <td style="text-align: center">0.1694</td>
+      <td style="text-align: center">0.7830</td>
+      <td style="text-align: center">0.2785</td>
+      <td style="text-align: center">4,133</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Accuracy</strong></td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"><strong>0.8580</strong></td>
+      <td style="text-align: center">118,108</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Macro Avg</strong></td>
+      <td style="text-align: center">0.5802</td>
+      <td style="text-align: center">0.8219</td>
+      <td style="text-align: center">0.5999</td>
+      <td style="text-align: center">118,108</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Weighted Avg</strong></td>
+      <td style="text-align: center">0.9622</td>
+      <td style="text-align: center">0.8580</td>
+      <td style="text-align: center">0.8988</td>
+      <td style="text-align: center">118,108</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>ROC AUC:</strong> <code class="language-plaintext highlighter-rouge">0.9007</code></p>
+
+<h4 id="fraudnet-on-pca-features"><strong>FraudNet on PCA Features</strong></h4>
+
+<p><strong>[RESULTS] FraudNet (PCA Model)</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Class</th>
+      <th style="text-align: center">Precision</th>
+      <th style="text-align: center">Recall</th>
+      <th style="text-align: center">F1-Score</th>
+      <th style="text-align: center">Support</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>0</strong></td>
+      <td style="text-align: center">0.9897</td>
+      <td style="text-align: center">0.8348</td>
+      <td style="text-align: center">0.9056</td>
+      <td style="text-align: center">113,975</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>1</strong></td>
+      <td style="text-align: center">0.1429</td>
+      <td style="text-align: center">0.7595</td>
+      <td style="text-align: center">0.2405</td>
+      <td style="text-align: center">4,133</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Accuracy</strong></td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"><strong>0.8321</strong></td>
+      <td style="text-align: center">118,108</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Macro Avg</strong></td>
+      <td style="text-align: center">0.5663</td>
+      <td style="text-align: center">0.7971</td>
+      <td style="text-align: center">0.5731</td>
+      <td style="text-align: center">118,108</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Weighted Avg</strong></td>
+      <td style="text-align: center">0.9600</td>
+      <td style="text-align: center">0.8321</td>
+      <td style="text-align: center">0.8824</td>
+      <td style="text-align: center">118,108</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>ROC AUC:</strong> <code class="language-plaintext highlighter-rouge">0.9007</code></p>
+
+<h4 id="confusion-matrices">Confusion Matrices</h4>
+
+<p>To visualize performance, we plotted confusion matrices for both models.</p>
+
+<table>
+  <tr>
+    <td><img width="400" alt="Neural Network Confusion Matrix Original" src="assets/NN_CM1.png" /></td>
+    <td><img width="400" alt="Neural Network Confusion Matrix PCA" src="assets/NN_CM2.png" /></td>
+  </tr>
+  <tr>
+    <td align="center">Original Features</td>
+    <td align="center">PCA Features</td>
+  </tr>
+</table>
+
+<p>These matrices show that the Full Model misclassifies fewer fraudulent transactions than the PCA model, consistent with the metrics reported above.</p>
+
+<h4 id="roc-curves">ROC Curves</h4>
+
+<p>Both models’ ROC curves can be plotted on the same figure for comparison:</p>
+
+<p><img width="500" alt="Neural Network ROC Curve" src="assets/NN_ROC.png" /></p>
+
+<p>The ROC curves confirm that the Full Model consistently achieves higher true positive rates at the same false positive rates compared to the PCA Model.</p>
+
+<h4 id="precision-recall-curve">Precision-Recall Curve</h4>
+
+<p><img width="500" alt="Neural Network Precision Recall Curve" src="assets/NN_PR.png" /></p>
+
+<p>The precision-recall curve shows the trade-off between precision and recall across different thresholds. It illustrates how well the model identifies fraudulent transactions while minimizing false positives.</p>
+
+<h4 id="analysis-1">Analysis</h4>
+
+<p>FraudNet outperforms logistic regression overall, especially in ROC AUC. The Full Model using original features achieves higher recall and F1-score for fraudulent transactions, capturing more fraud while keeping false positives relatively low. The PCA model performs slightly worse, suggesting that dimensionality reduction may discard important information. The confusion matrices and precision-recall curve confirm these differences, showing the Full Model maintains higher precision across most recall values. Given the severe real-world consequences of undetected fraud, these results highlight the importance of carefully considering which features to include. Overall, FraudNet demonstrates the benefit of a non-linear neural network approach over a linear model.</p>
+
+<h4 id="next-steps-1">Next Steps</h4>
+
+<p>To further improve FraudNet performance, we plan to:</p>
+
+<ol>
+  <li>
+    <p><strong>Experiment with threshold tuning</strong> – lowering the probability threshold for classifying fraud to reduce false negatives.</p>
+  </li>
+  <li>
+    <p><strong>Adjust the network architecture</strong> – explore deeper layers or different hidden sizes to capture more complex patterns.</p>
+  </li>
+  <li>
+    <p><strong>Incorporate additional regularization or dropout</strong> – to improve generalization without losing predictive power.</p>
+  </li>
+</ol>
+
+<h3 id="46-k-means-unsupervised-results-and-analysis">4.6 K-Means (Unsupervised) Results and Analysis</h3>
+
+<p>To separate fraud from non fraud we set k=2 and evaluate how K Means performs on the engineered features in Section 3.1. To avoid overwhelming the clustering with very high dimensional signals, we exclude the electronic footprint features V1–V339. After feature engineering the data were imbalanced at about 10:1 non fraud to fraud, so we applied data augmentation to balance the train and test splits. Because K Means is label free, we fit on the train split, map clusters to classes (isFraud ∈ {0,1}) by majority vote on the training labels, and apply that mapping to both splits. The findings for training and testing are reported below.</p>
+
+<hr />
+
+<h4 id="results-k-means--majority-label-train">[RESULTS] K Means ⇒ Majority Label (Train)</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Class</th>
+      <th style="text-align: center">Precision</th>
+      <th style="text-align: center">Recall</th>
+      <th style="text-align: center">F1 Score</th>
+      <th style="text-align: right">Support</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">0 (Non fraud)</td>
+      <td style="text-align: center">0.6657</td>
+      <td style="text-align: center">0.5259</td>
+      <td style="text-align: center">0.5876</td>
+      <td style="text-align: right">74,976</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">1 (Fraud)</td>
+      <td style="text-align: center">0.6082</td>
+      <td style="text-align: center">0.7359</td>
+      <td style="text-align: center">0.6660</td>
+      <td style="text-align: right">74,976</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Accuracy</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center">0.6309</td>
+      <td style="text-align: right">149,952</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Macro Avg</td>
+      <td style="text-align: center">0.6369</td>
+      <td style="text-align: center">0.6309</td>
+      <td style="text-align: center">0.6268</td>
+      <td style="text-align: right">149,952</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Weighted Avg</td>
+      <td style="text-align: center">0.6369</td>
+      <td style="text-align: center">0.6309</td>
+      <td style="text-align: center">0.6268</td>
+      <td style="text-align: right">149,952</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><img alt="Confusion Matrix K Means Train" src="src/Kmeans/kmeans_confusion_train.png" width="520" /></p>
+
+<h4 id="results-k-means--majority-label-test">[RESULTS] K Means ⇒ Majority Label (Test)</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Class</th>
+      <th style="text-align: center">Precision</th>
+      <th style="text-align: center">Recall</th>
+      <th style="text-align: center">F1 Score</th>
+      <th style="text-align: right">Support</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">0 (Non fraud)</td>
+      <td style="text-align: center">0.6643</td>
+      <td style="text-align: center">0.5288</td>
+      <td style="text-align: center">0.5888</td>
+      <td style="text-align: right">24,992</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">1 (Fraud)</td>
+      <td style="text-align: center">0.6086</td>
+      <td style="text-align: center">0.7327</td>
+      <td style="text-align: center">0.6649</td>
+      <td style="text-align: right">24,992</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Accuracy</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center">0.6308</td>
+      <td style="text-align: right">49,984</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Macro Avg</td>
+      <td style="text-align: center">0.6365</td>
+      <td style="text-align: center">0.6308</td>
+      <td style="text-align: center">0.6269</td>
+      <td style="text-align: right">49,984</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Weighted Avg</td>
+      <td style="text-align: center">0.6365</td>
+      <td style="text-align: center">0.6308</td>
+      <td style="text-align: center">0.6269</td>
+      <td style="text-align: right">49,984</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><img alt="Confusion Matrix K Means Test" src="src/Kmeans/kmeans_confusion_test.png" width="520" /></p>
+
+<p>Train and test behave similarly, so the unsupervised pipeline does not appear to overfit. In both splits the fraud class has recall about 0.73 and precision about 0.61. This means many frauds are caught with more false alarms. False negatives are lower. Overall accuracy is about 0.631.</p>
+
+<hr />
+
+<h4 id="precision-and-recall-behavior-score-distributions">Precision and recall behavior (score distributions)</h4>
+
+<p>We convert distance to centroid into a normalized fraud score in [0,1]. Larger values indicate more anomalous behavior. The histograms show that frauds shift toward higher anomaly scores, but there is still large overlap, which explains moderate precision at high recall.</p>
+
+<p><img alt="Predicted Scores K Means Train" src="src/Kmeans/kmeans_score_hist_train.png" width="520" />
+<img alt="Predicted Scores K Means Test" src="src/Kmeans/kmeans_score_hist_test.png" width="520" /></p>
+
+<hr />
+
+<h4 id="internal-cluster-quality-measures-label-free">Internal cluster quality measures (label free)</h4>
+
+<p>We report Silhouette (↑), Calinski–Harabasz (↑), Davies–Bouldin (↓), and BetaCV (↓) on standardized features for train and test. All metrics are plotted on one linear axis.</p>
+
+<p><img alt="K Means Internal Metrics" src="src/Kmeans/kmeans_internal_metrics_linear_single.png" width="820" /></p>
+
+<hr />
+
+<h4 id="analysis-2">Analysis</h4>
+
+<p>K Means did not work fine in this setting. It is a centroid based method that best separates roughly circular or spherical clusters. Our data likely have a more complex and non spherical distribution. This explains the higher false positives and false negatives seen in the confusion matrices and the internal measures. Silhouette is low, DB and BetaCV are higher, and CH is only modest. These patterns indicate overlapping clusters rather than clean separation. K Means should be used as a baseline or as a feature generator and early filter, not as a standalone fraud detector.</p>
+
+<h4 id="next-steps-2">Next steps</h4>
+
+<p>We will test k greater than 2 with stable k means++ restarts and sanity checks across resamples such as ARI and NMI. We will try dimensionality reduction such as PCA or UMAP before clustering. We will also evaluate Gaussian Mixture Models and DBSCAN or HDBSCAN to capture non spherical structure. Finally, we will feed distance to centroid scores into the supervised model and calibrate thresholds to control the false positive rate while monitoring centroid drift and internal measures over time.</p>
+
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Credit Card Fraud Detection</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Credit Card Fraud Detection</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p></p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

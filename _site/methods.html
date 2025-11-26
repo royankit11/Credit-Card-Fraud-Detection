@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Methods | Credit Card Fraud Detection</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="Methods" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/methods.html" />
+<meta property="og:url" content="http://localhost:4000/methods.html" />
+<meta property="og:site_name" content="Credit Card Fraud Detection" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Methods" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","headline":"Methods","url":"http://localhost:4000/methods.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Credit Card Fraud Detection" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Credit Card Fraud Detection</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/">Home</a><a class="page-link" href="/problem.html">Problem</a><a class="page-link" href="/methods.html">Methods</a><a class="page-link" href="/results.html">Results</a><a class="page-link" href="/references.html">References</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Methods</h1>
+  </header>
+
+  <div class="post-content">
+    <h3 id="31-data-preprocessing">3.1 Data Preprocessing</h3>
+
+<p>Preprocessing includes encoding, scaling, and light feature engineering.</p>
+<ul>
+  <li><strong>Encoding</strong>: One-hot encoding for low-cardinality features (e.g., <code class="language-plaintext highlighter-rouge">ProductCD</code>, <code class="language-plaintext highlighter-rouge">DeviceType</code>) and frequency encoding for high-cardinality features (e.g., <code class="language-plaintext highlighter-rouge">card1</code>, <code class="language-plaintext highlighter-rouge">P_emaildomain</code>) to avoid dimensionality issues.</li>
+  <li><strong>Scaling</strong>: Standardization for continuous variables like <code class="language-plaintext highlighter-rouge">TransactionAmt</code>, important for clustering and Isolation Forest.</li>
+  <li><strong>Feature Engineering</strong>: Extracting day, hour, and weekend flags from timestamps; generating aggregate statistics such as transaction counts per card over time windows.</li>
+</ul>
+
+<h3 id="32-pca">3.2 PCA</h3>
+
+<p>PCA was applied to reduce the high-dimensional V1–V339 feature block while retaining most of the variance, and later performed again on the entire dataset for further dimensionality reduction.
+The process:</p>
+<ol>
+  <li><strong>Group by NaN pattern</strong> - Columns with the same missing-value structure were grouped together.</li>
+  <li><strong>Within-group reduction</strong> - For each group: large groups used PCA, medium groups kept uncorrelated subsets, and small groups were averaged.</li>
+  <li><strong>Combined reduced groups</strong> - All reduced outputs were merged back into the dataset.</li>
+  <li><strong>Final PCA</strong> - A global PCA with 50 components captured 93% of total variance, yielding a compact and efficient feature set for modeling.</li>
+</ol>
+
+<p>For our midterm checkpoint, the data preprocessing algorithm we implemented is <strong>PCA</strong>.</p>
+
+<h3 id="33-supervised-learning">3.3 Supervised Learning</h3>
+
+<p>We’ll evaluate multiple supervised models:</p>
+<ul>
+  <li><strong>Logistic Regression</strong> as a baseline, providing interpretability and coefficients that highlight key risk factors.</li>
+  <li><strong>Random Forest</strong> for capturing non-linear feature interactions and generating feature importance.</li>
+  <li><strong>Gradient Boosting</strong>, well-suited for imbalanced tabular data and expected to deliver strong performance.</li>
+</ul>
+
+<p>For our midterm checkpoint, we implemented the <strong>logistic regression</strong> model.</p>
+
+<h3 id="34-unsupervised-learning">3.4 Unsupervised Learning</h3>
+
+<p>To complement supervised approaches, we use unsupervised anomaly detection:</p>
+<ul>
+  <li><strong>K-Means clustering</strong> groups transactions, flagging those far from cluster centers.</li>
+  <li><strong>Isolation Forest</strong> isolates anomalies effectively in high-dimensional data.
+These methods reflect real-world challenges where fraudulent cases are underreported or unseen in training data.</li>
+</ul>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Credit Card Fraud Detection</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Credit Card Fraud Detection</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p></p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
