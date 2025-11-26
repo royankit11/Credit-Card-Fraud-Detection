@@ -1,3 +1,6 @@
 ieee-fraud-detection/
 *.csv
 *.zip
+*.DS_Store
+__pycache__/
+*.py[cod]
