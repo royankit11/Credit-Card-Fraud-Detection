@@ -167,18 +167,13 @@ To make a more advanced supervised model, we architected a neural network, calle
 
 **ROC AUC:** `0.9007`  
 
-#### Analysis
-
-From the tables above, we observe that the FraudNet model performs better overall than logistic regression, especially in terms of ROC AUC. The Full Model (using original features) achieves higher recall and F1-score for fraudulent transactions, indicating it captures more fraud while keeping the number of false positives lower.
-
-Using PCA features results in slightly lower performance, suggesting that dimensionality reduction may discard some information valuable for fraud detection. This mirrors what we observed in the logistic regression experiments.
 
 #### Confusion Matrices
 
 To visualize performance, we plotted confusion matrices for both models.
 
-<img width="451" alt="Screenshot 2025-11-26 at 11 51 05 AM" src="https://github.gatech.edu/user-attachments/assets/e826c31b-3e14-4b58-aaaa-4281b91ec87f" />
-<img width="450" alt="Screenshot 2025-11-26 at 11 51 12 AM" src="https://github.gatech.edu/user-attachments/assets/729aba49-a786-4f6e-8195-f20755209bbe" />
+<img width="350" alt="Screenshot 2025-11-26 at 11 51 05 AM" src="https://github.gatech.edu/user-attachments/assets/e826c31b-3e14-4b58-aaaa-4281b91ec87f" />
+<img width="350" alt="Screenshot 2025-11-26 at 11 51 12 AM" src="https://github.gatech.edu/user-attachments/assets/729aba49-a786-4f6e-8195-f20755209bbe" />
 
 These matrices show that the Full Model misclassifies fewer fraudulent transactions than the PCA model, consistent with the metrics reported above.
 
@@ -189,6 +184,18 @@ Both models’ ROC curves can be plotted on the same figure for comparison:
 <img width="691" alt="Screenshot 2025-11-26 at 11 50 43 AM" src="https://github.gatech.edu/user-attachments/assets/8a1f190d-6ea1-4ae1-93ff-38a9003937a5" />
 
 The ROC curves confirm that the Full Model consistently achieves higher true positive rates at the same false positive rates compared to the PCA Model.
+
+#### Precision-Recall Curve
+
+<img width="689" alt="Screenshot 2025-11-26 at 11 50 56 AM" src="https://github.gatech.edu/user-attachments/assets/ed7c1285-a3de-443d-8176-0096a97c14a6" />
+
+The precision-recall curve shows the trade-off between precision and recall across different thresholds. It illustrates how well the model identifies fraudulent transactions while minimizing false positives.
+
+
+#### Analysis
+
+FraudNet outperforms logistic regression overall, especially in ROC AUC. The Full Model using original features achieves higher recall and F1-score for fraudulent transactions, capturing more fraud while keeping false positives relatively low. The PCA model performs slightly worse, suggesting that dimensionality reduction may discard important information. The confusion matrices and precision-recall curve confirm these differences, showing the Full Model maintains higher precision across most recall values. Given the severe real-world consequences of undetected fraud, these results highlight the importance of carefully considering which features to include. Overall, FraudNet demonstrates the benefit of a non-linear neural network approach over a linear model.
+
 
 #### **Next Steps**
 
