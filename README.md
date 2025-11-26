@@ -167,6 +167,40 @@ To make a more advanced supervised model, we architected a neural network, calle
 
 **ROC AUC:** `0.9007`  
 
+#### Analysis
+
+From the tables above, we observe that the FraudNet model performs better overall than logistic regression, especially in terms of ROC AUC. The Full Model (using original features) achieves higher recall and F1-score for fraudulent transactions, indicating it captures more fraud while keeping the number of false positives lower.
+
+Using PCA features results in slightly lower performance, suggesting that dimensionality reduction may discard some information valuable for fraud detection. This mirrors what we observed in the logistic regression experiments.
+
+#### Confusion Matrices
+
+To visualize performance, we plotted confusion matrices for both models.
+
+<img width="451" alt="Screenshot 2025-11-26 at 11 51 05 AM" src="https://github.gatech.edu/user-attachments/assets/e826c31b-3e14-4b58-aaaa-4281b91ec87f" />
+<img width="450" alt="Screenshot 2025-11-26 at 11 51 12 AM" src="https://github.gatech.edu/user-attachments/assets/729aba49-a786-4f6e-8195-f20755209bbe" />
+
+These matrices show that the Full Model misclassifies fewer fraudulent transactions than the PCA model, consistent with the metrics reported above.
+
+#### ROC Curves
+
+Both models’ ROC curves can be plotted on the same figure for comparison:
+
+<img width="691" alt="Screenshot 2025-11-26 at 11 50 43 AM" src="https://github.gatech.edu/user-attachments/assets/8a1f190d-6ea1-4ae1-93ff-38a9003937a5" />
+
+The ROC curves confirm that the Full Model consistently achieves higher true positive rates at the same false positive rates compared to the PCA Model.
+
+#### **Next Steps**
+
+To further improve FraudNet performance, we plan to:
+
+1. **Experiment with threshold tuning** – lowering the probability threshold for classifying fraud to reduce false negatives.
+
+2. **Adjust the network architecture** – explore deeper layers or different hidden sizes to capture more complex patterns.
+
+3. **Incorporate additional regularization or dropout** – to improve generalization without losing predictive power.
+
+
 ### 4.6 K-Means (Unsupervised) Results and Analysis
 
 To separate fraud from non fraud we set k=2 and evaluate how K Means performs on the engineered features in Section 3.1. To avoid overwhelming the clustering with very high dimensional signals, we exclude the electronic footprint features V1–V339. After feature engineering the data were imbalanced at about 10:1 non fraud to fraud, so we applied data augmentation to balance the train and test splits. Because K Means is label free, we fit on the train split, map clusters to classes (isFraud ∈ {0,1}) by majority vote on the training labels, and apply that mapping to both splits. The findings for training and testing are reported below.
