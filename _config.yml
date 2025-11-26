@@ -1,0 +1,10 @@
+title: "Credit Card Fraud Detection"
+theme: minima
+markdown: kramdown
+paginate: 5
+header_pages:
+  - index.md
+  - problem.md
+  - methods.md
+  - results.md
+  - references.md
