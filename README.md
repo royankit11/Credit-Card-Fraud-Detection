@@ -137,7 +137,37 @@ Given the state of our model, there are a few steps we can take to look to impro
 
 For a more in depth look at the code generating these images, look into the logistic_regression_analysis notebook file. 
 
-### 4.5 K-Means (Unsupervised) Results and Analysis
+### 4.5 Neural Network (Supervised) Results and Analysis
+
+To make a more advanced supervised model, we architected a neural network, called FraudNet. We created two major models, one using the features from the original dataset, and one with the features from our PCA algorithm. Their results are below:
+
+**[RESULTS] FraudNet (Full Model)**  
+
+| Class | Precision | Recall | F1-Score | Support |
+|:------|:----------:|:-------:|:---------:|:--------:|
+| **0** | 0.9909 | 0.8608 | 0.9213 | 113,975 |
+| **1** | 0.1694 | 0.7830 | 0.2785 | 4,133 |
+| **Accuracy** |  |  | **0.8580** | 118,108 |
+| **Macro Avg** | 0.5802 | 0.8219 | 0.5999 | 118,108 |
+| **Weighted Avg** | 0.9622 | 0.8580 | 0.8988 | 118,108 |
+
+**ROC AUC:** `0.9007`  
+
+#### **FraudNet on PCA Features**
+
+**[RESULTS] FraudNet (PCA Model)**  
+
+| Class | Precision | Recall | F1-Score | Support |
+|:------|:----------:|:-------:|:---------:|:--------:|
+| **0** | 0.9897 | 0.8348 | 0.9056 | 113,975 |
+| **1** | 0.1429 | 0.7595 | 0.2405 | 4,133 |
+| **Accuracy** |  |  | **0.8321** | 118,108 |
+| **Macro Avg** | 0.5663 | 0.7971 | 0.5731 | 118,108 |
+| **Weighted Avg** | 0.9600 | 0.8321 | 0.8824 | 118,108 |
+
+**ROC AUC:** `0.9007`  
+
+### 4.6 K-Means (Unsupervised) Results and Analysis
 
 To separate fraud from non fraud we set k=2 and evaluate how K Means performs on the engineered features in Section 3.1. To avoid overwhelming the clustering with very high dimensional signals, we exclude the electronic footprint features V1–V339. After feature engineering the data were imbalanced at about 10:1 non fraud to fraud, so we applied data augmentation to balance the train and test splits. Because K Means is label free, we fit on the train split, map clusters to classes (isFraud ∈ {0,1}) by majority vote on the training labels, and apply that mapping to both splits. The findings for training and testing are reported below.
 
