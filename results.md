@@ -222,3 +222,14 @@ K Means did not work fine in this setting. It is a centroid based method that be
 
 We will test k greater than 2 with stable k means++ restarts and sanity checks across resamples such as ARI and NMI. We will try dimensionality reduction such as PCA or UMAP before clustering. We will also evaluate Gaussian Mixture Models and DBSCAN or HDBSCAN to capture non spherical structure. Finally, we will feed distance to centroid scores into the supervised model and calibrate thresholds to control the false positive rate while monitoring centroid drift and internal measures over time.
 
+## 5. Comparison of Models
+
+Across all three models, the supervised approaches—Logistic Regression and FraudNet—clearly outperformed the unsupervised K-Means baseline. Logistic Regression on the original features provided a reasonable linear baseline with an ROC-AUC of 0.86 and a PR-AUC of about 0.43. However, it struggled to identify fraud consistently, missing over a thousand fraudulent transactions and achieving a relatively weak fraud F1-score. When trained on PCA-reduced features, its performance dropped across all major metrics, confirming that PCA removed meaningful structure that the linear model relied on.
+
+FraudNet, the neural network, delivered the strongest overall performance. Using the full feature set, it reached an ROC-AUC of 0.90 and a higher PR-AUC of roughly 0.55, indicating better ranking and separation between fraud and non-fraud. It also produced higher fraud recall (around 78%) and a noticeably stronger fraud F1-score than Logistic Regression, demonstrating that a nonlinear architecture captures fraud patterns that the linear model cannot. Like Logistic Regression, the PCA version of FraudNet underperformed the full model, reinforcing that dimensionality reduction removed informative signals.
+
+K-Means, the unsupervised model, performed the weakest. After mapping clusters to labels, it achieved only 63% accuracy with fraud precision around 61% and recall around 73%, indicating substantial overlap between clusters and high false-positive rates. Its internal clustering metrics also showed poor separation, confirming that fraudulent transactions do not form clean geometric clusters that K-Means can detect.
+
+Overall, FraudNet is the strongest model, providing the best balance of precision, recall, and ranking performance. Logistic Regression serves as a solid interpretable baseline but struggles with the complexity of fraud data, while K-Means should be viewed mainly as an exploratory or supportive tool rather than a standalone fraud detection method.
+
+<img alt="Logistic Regression vs Neural Network PR-AUC curve"  src="assets/LR_vs_NN.png"  width="520"/>
