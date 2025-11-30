@@ -21,20 +21,16 @@ The process:
 3. **Combined reduced groups** - All reduced outputs were merged back into the dataset.
 4. **Final PCA** - A global PCA with 50 components captured 93% of total variance, yielding a compact and efficient feature set for modeling.
 
-For our midterm checkpoint, the data preprocessing algorithm we implemented is **PCA**.
-
 ### 3.3 Supervised Learning
 
 We'll evaluate multiple supervised models:
 * **Logistic Regression** as a baseline, providing interpretability and coefficients that highlight key risk factors.
-* **Random Forest** for capturing non-linear feature interactions and generating feature importance.
-* **Gradient Boosting**, well-suited for imbalanced tabular data and expected to deliver strong performance.
+* **Neural Network** for capturing complex non-linear patterns and interactions in the data.
 
-For our midterm checkpoint, we implemented the **logistic regression** model.
 
 ### 3.4 Unsupervised Learning
 
 To complement supervised approaches, we use unsupervised anomaly detection:
 * **K-Means clustering** groups transactions, flagging those far from cluster centers.
-* **Isolation Forest** isolates anomalies effectively in high-dimensional data.
+* **DBSCAN** identifies dense regions and detects outliers in non-spherical clusters.
 These methods reflect real-world challenges where fraudulent cases are underreported or unseen in training data.
