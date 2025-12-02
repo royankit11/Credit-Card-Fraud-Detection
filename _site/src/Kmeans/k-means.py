@@ -19,18 +19,20 @@ except Exception:
     HAVE_RAND = False
 
 # ------------------ CONFIG ------------------
-FILE = "augmented_processed.csv"
+TRAIN_FILE = "train.csv"
+TEST_FILE  = "test.csv"
 K = 2
 SEED = 10
-TEST_SIZE = 0.25
 SIL_SAMPLE = 20000
 BETACV_SAMPLE = 5000
 # --------------------------------------------
 
 def load_data(path):
     df = pd.read_csv(path)
+
     if "isFraud" not in df.columns:
-        raise ValueError("Column 'isFraud' not found.")
+        raise ValueError(f"'isFraud' column not found in {path}")
+
     y = df["isFraud"].astype(int).to_numpy()
     X = df.drop(columns=["isFraud", "TransactionID"], errors="ignore").fillna(0.0)
     return X, y
@@ -75,7 +77,7 @@ def two_by_k_table(y_true_bin, clusters, k):
     return tab
 
 def learn_label_map_k(y_true_bin, clusters, k):
-    """Return set of cluster ids to label as 'fraud'=1."""
+    
     tab = two_by_k_table(y_true_bin, clusters, k)
     totals = tab.sum(axis=0)
     with np.errstate(divide="ignore", invalid="ignore"):
@@ -113,37 +115,65 @@ def external_metrics(y_true, y_pred_bin):
     vme = v_measure_score(y_true, y_pred_bin)
     nmi = normalized_mutual_info_score(y_true, y_pred_bin)
     rnd = rand_score(y_true, y_pred_bin) if HAVE_RAND else np.nan
-    return cm, prec, rec, f1, jacc, rnd, ari, fm, vme, nmi
+    
+    acc = (cm[0, 0] + cm[1, 1]) / cm.sum()
+
+    prec, rec, f1, _ = precision_recall_fscore_support(
+        y_true, y_pred_bin, average="binary", zero_division=0
+    )
+    jacc = jaccard_score(y_true, y_pred_bin, average="binary", zero_division=0)
+    fm = fowlkes_mallows_score(y_true, y_pred_bin)
+    ari = adjusted_rand_score(y_true, y_pred_bin)
+    vme = v_measure_score(y_true, y_pred_bin)
+    nmi = normalized_mutual_info_score(y_true, y_pred_bin)
+    rnd = rand_score(y_true, y_pred_bin) if HAVE_RAND else np.nan
+
+    
+    return cm, acc, prec, rec, f1, jacc, rnd, ari, fm, vme, nmi
 
 def plot_confusion(cm, title):
+    cm = np.asarray(cm)
+    total = cm.sum()
+    cm_pct = cm.astype(float) / max(total, 1) * 100.0
+
     fig, ax = plt.subplots(figsize=(4, 4))
-    im = ax.imshow(cm, interpolation="nearest")
+    im = ax.imshow(cm_pct, interpolation="nearest", cmap="Blues",
+                   vmin=0, vmax=100)
     ax.set_title(title)
-    ax.set_xlabel("Predicted"); ax.set_ylabel("Actual")
-    ax.set_xticks([0, 1]); ax.set_yticks([0, 1])
+    ax.set_xlabel("Predicted")
+    ax.set_ylabel("Actual")
+    ax.set_xticks([0, 1])
+    ax.set_yticks([0, 1])
+
+    cbar = plt.colorbar(im, ax=ax)
+    cbar.set_label("% of samples")
+
     for i in range(2):
         for j in range(2):
-            ax.text(j, i, int(cm[i, j]), ha="center", va="center")
-    plt.tight_layout(); plt.show()
+            ax.text(j, i, f"{cm_pct[i, j]:.1f}%",
+                    ha="center", va="center", color="black")
+
+    plt.tight_layout()
+    plt.show()
 
 def main():
    
-    X, y = load_data(FILE)
-    X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=TEST_SIZE, random_state=SEED, stratify=y)
 
-    
+    X_tr, y_tr = load_data(TRAIN_FILE)
+    X_te, y_te = load_data(TEST_FILE)
+
     Xtr, Xte = standardize_train_test(X_tr, X_te)
 
-   
     ytr_k, yte_k = run_kmeans_train_predict(Xtr, Xte, K, SEED)
 
-    
+
     for split, Xs, ls in [("Train", Xtr, ytr_k), ("Test", Xte, yte_k)]:
         sil = safe_silhouette(Xs, ls, SIL_SAMPLE)
         dbi = davies_bouldin_score(Xs, ls)
         bcv = beta_cv(Xs, ls, BETACV_SAMPLE, SEED)
         print(f"\n[{split}] Internal")
         print(f"  Silhouette: {sil:.4f}  |  Davies–Bouldin: {dbi:.4f}  |  BetaCV: {bcv:.4f}")
+
 
     
     print("\n[Train] 2×k confusion (rows=actual 0/1, cols=cluster id):")
@@ -165,17 +195,26 @@ def main():
 
     
     for split, y_true, y_pred in [("Train", y_tr, ytr_pred), ("Test", y_te, yte_pred)]:
-        cm, prec, rec, f1, jacc, rnd, ari, fm, vme, nmi = external_metrics(y_true, y_pred)
+        cm, acc, prec, rec, f1, jacc, rnd, ari, fm, vme, nmi = external_metrics(y_true, y_pred)
         print(f"\n[{split}] External (vs isFraud)")
         print("Confusion matrix [rows=actual 0/1, cols=pred 0/1]:")
         print(cm)
+        print(f"Accuracy:  {acc:.4f}")
         print(f"Precision: {prec:.4f} | Recall: {rec:.4f} | F1: {f1:.4f}")
         print(f"Jaccard: {jacc:.4f} | Rand: {rnd:.4f} | Adjusted Rand: {ari:.4f} | Fowlkes–Mallows: {fm:.4f}")
         print(f"V-measure: {vme:.4f} | NMI: {nmi:.4f}")
 
-    
-    plot_confusion(confusion_matrix(y_tr, ytr_pred, labels=[0,1]), "Train Confusion Matrix (Mapped)")
-    plot_confusion(confusion_matrix(y_te, yte_pred, labels=[0,1]), "Test Confusion Matrix (Mapped)")
+    cm_tr = confusion_matrix(y_tr, ytr_pred, labels=[0, 1])
+    cm_tr_pct = cm_tr.astype(float) / cm_tr.sum() * 100.0
+    print("\n[Train] Confusion matrix (% of all samples, rows=actual 0/1, cols=pred 0/1):")
+    print(np.round(cm_tr_pct, 2))
+    plot_confusion(cm_tr, "Train Confusion Matrix")
+
+    cm_te = confusion_matrix(y_te, yte_pred, labels=[0, 1])
+    cm_te_pct = cm_te.astype(float) / cm_te.sum() * 100.0
+    print("\n[Test] Confusion matrix (% of all samples, rows=actual 0/1, cols=pred 0/1):")
+    print(np.round(cm_te_pct, 2))
+    plot_confusion(cm_te, "Test Confusion Matrix")
 
 if __name__ == "__main__":
     main()
