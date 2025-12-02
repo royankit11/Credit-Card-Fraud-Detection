@@ -162,74 +162,101 @@ To further improve FraudNet performance, we plan to:
 
 3. **Incorporate additional regularization or dropout** – to improve generalization without losing predictive power.
 
-
 ### 4.6 K-Means (Unsupervised) Results and Analysis
 
-To separate fraud from non fraud we set k=2 and evaluate how K Means performs on the engineered features in Section 3.1. To avoid overwhelming the clustering with very high dimensional signals, we exclude the electronic footprint features V1–V339. After feature engineering the data were imbalanced at about 10:1 non fraud to fraud, so we applied data augmentation to balance the train and test splits. Because K Means is label free, we fit on the train split, map clusters to classes (isFraud ∈ {0,1}) by majority vote on the training labels, and apply that mapping to both splits. The findings for training and testing are reported below.
+To separate fraud from non-fraud, we set $K=2$ and evaluated how K-Means performs on the engineered features. To avoid overwhelming the clustering with very high-dimensional signals, we excluded the electronic footprint features (V1–V339). The dataset was balanced using augmentation techniques. [cite_start]Since K-Means is label-free, we mapped the resulting clusters to classes (Fraud vs. Non-Fraud) based on the majority vote of the training labels[cite: 13].
 
----
+#### **[RESULTS] K-Means Evaluation**
 
-#### [RESULTS] K Means ⇒ Majority Label (Train)
+We evaluated the model using both internal clustering metrics and external classification metrics.
 
-| Class | Precision | Recall | F1 Score | Support |
-|:--|:--:|:--:|:--:|--:|
-| 0 (Non fraud) | 0.6657 | 0.5259 | 0.5876 | 74,976 |
-| 1 (Fraud)     | 0.6082 | 0.7359 | 0.6660 | 74,976 |
-| Accuracy |  |  | 0.6309 | 149,952 |
-| Macro Avg | 0.6369 | 0.6309 | 0.6268 | 149,952 |
-| Weighted Avg | 0.6369 | 0.6309 | 0.6268 | 149,952 |
+**Internal Indices (Cluster Quality)**
+* [cite_start]**Silhouette Score:** `0.1516` (Test) - The low score indicates that the clusters are overlapping and not well-separated.
+* [cite_start]**Davies-Bouldin Index:** `2.9519` - A high value confirms poor separation between fraud and non-fraud clusters.
 
-<img alt="Confusion Matrix K Means Train" src="src/Kmeans/kmeans_confusion_train.png" width="520"/>
+**External Indices (Classification Performance)**
 
-#### [RESULTS] K Means ⇒ Majority Label (Test)
+| Metric | Train | Test | Benchmark |
+|:---|:---:|:---:|:---|
+| **Accuracy** | 0.6306 | **0.6315** | Close to 1 |
+| **Precision** | 0.6083 | **0.6081** | Close to 1 |
+| **Recall** | 0.7345 | **0.7365** | Close to 1 |
+| **F1-Score** | 0.6654 | **0.6662** | Close to 1 |
 
-| Class | Precision | Recall | F1 Score | Support |
-|:--|:--:|:--:|:--:|--:|
-| 0 (Non fraud) | 0.6643 | 0.5288 | 0.5888 | 24,992 |
-| 1 (Fraud)     | 0.6086 | 0.7327 | 0.6649 | 24,992 |
-| Accuracy |  |  | 0.6308 | 49,984 |
-| Macro Avg | 0.6365 | 0.6308 | 0.6269 | 49,984 |
-| Weighted Avg | 0.6365 | 0.6308 | 0.6269 | 49,984 |
+#### **Confusion Matrices**
 
-<img alt="Confusion Matrix K Means Test" src="src/Kmeans/kmeans_confusion_test.png" width="520"/>
+<table align="center">
+  <tr>
+    <td align="center"><img src="src/Kmeans/kmeans_confusion_train.png" alt="K-Means Confusion Matrix Train" width="400"/></td>
+    <td align="center"><img src="src/Kmeans/kmeans_confusion_test.png" alt="K-Means Confusion Matrix Test" width="400"/></td>
+  </tr>
+  <tr>
+    <td align="center">Train Confusion Matrix</td>
+    <td align="center">Test Confusion Matrix</td>
+  </tr>
+</table>
 
-Train and test behave similarly, so the unsupervised pipeline does not appear to overfit. In both splits the fraud class has recall about 0.73 and precision about 0.61. This means many frauds are caught with more false alarms. False negatives are lower. Overall accuracy is about 0.631.
+#### **Analysis**
 
----
+K-Means provided a structural baseline but ultimately struggled with this dataset. The method assumes spherical, distinct clusters, whereas fraud data often exhibits complex, non-globular distributions. The low Silhouette score (~0.15) confirms that the clusters were not distinct. [cite_start]While the recall (~73%) was decent, the high false-positive rate suggests that K-Means is better suited as a feature generator or an early-stage filter rather than a standalone fraud detector.
 
-#### Precision and recall behavior (score distributions)
+### 4.7 DBSCAN (Unsupervised) Results and Analysis
 
-We convert distance to centroid into a normalized fraud score in [0,1]. Larger values indicate more anomalous behavior. The histograms show that frauds shift toward higher anomaly scores, but there is still large overlap, which explains moderate precision at high recall.
+Addressing the limitations of K-Means, we implemented **DBSCAN (Density-Based Spatial Clustering of Applications with Noise)**. [cite_start]Unlike K-Means, DBSCAN does not require specifying the number of clusters in advance and can identify outliers (noise) effectively, which is ideal for anomaly detection[cite: 17].
 
-<img alt="Predicted Scores K Means Train" src="src/Kmeans/kmeans_score_hist_train.png" width="520"/>
-<img alt="Predicted Scores K Means Test"  src="src/Kmeans/kmeans_score_hist_test.png"  width="520"/>
+#### **Parameter Selection**
+We determined the optimal parameters through K-distance graph analysis:
+* **MinPts:** 2
+* **Epsilon ($\epsilon$):** 2.4
+* [cite_start]**Rationale:** This combination yielded the highest accuracy while maintaining a low noise ratio, which is critical for practical fraud detection[cite: 18].
 
----
+#### **[RESULTS] DBSCAN Evaluation**
 
-#### Internal cluster quality measures (label free)
+**Internal Indices**
+* [cite_start]**Silhouette Score:** `-0.057` (Test) [cite: 19]
+* [cite_start]**Davies-Bouldin Index:** `1.6727` [cite: 19]
 
-We report Silhouette (↑), Calinski–Harabasz (↑), Davies–Bouldin (↓), and BetaCV (↓) on standardized features for train and test. All metrics are plotted on one linear axis.
+**External Indices (Classification Performance)**
 
-<img alt="K Means Internal Metrics" src="src/Kmeans/kmeans_internal_metrics_linear_single.png" width="820"/>
+| Metric | Train | Test | Benchmark |
+|:---|:---:|:---:|:---|
+| **Accuracy** | 0.7990 | **0.8228** | Close to 1 |
+| **Precision** | 0.7841 | **0.8056** | Close to 1 |
+| **Recall** | 0.8255 | **0.8503** | Close to 1 |
+| **F1-Score** | 0.8043 | **0.8273** | Close to 1 |
 
----
+* [cite_start]**Noise Handling:** The model identified approximately **16.78%** of the test data as noise, effectively separating distinct outliers from the main transaction clusters[cite: 19].
 
-#### Analysis
+#### **Confusion Matrices**
 
-K Means did not work fine in this setting. It is a centroid based method that best separates roughly circular or spherical clusters. Our data likely have a more complex and non spherical distribution. This explains the higher false positives and false negatives seen in the confusion matrices and the internal measures. Silhouette is low, DB and BetaCV are higher, and CH is only modest. These patterns indicate overlapping clusters rather than clean separation. K Means should be used as a baseline or as a feature generator and early filter, not as a standalone fraud detector.
+<table align="center">
+  <tr>
+    <td align="center"><img src="src/Kmeans/dbscan_confusion_train.png" alt="DBSCAN Confusion Matrix Train" width="400"/></td>
+    <td align="center"><img src="src/Kmeans/dbscan_confusion_test.png" alt="DBSCAN Confusion Matrix Test" width="400"/></td>
+  </tr>
+  <tr>
+    <td align="center">Train Confusion Matrix</td>
+    <td align="center">Test Confusion Matrix</td>
+  </tr>
+</table>
 
-#### Next steps
+#### **Analysis**
 
-We will test k greater than 2 with stable k means++ restarts and sanity checks across resamples such as ARI and NMI. We will try dimensionality reduction such as PCA or UMAP before clustering. We will also evaluate Gaussian Mixture Models and DBSCAN or HDBSCAN to capture non spherical structure. Finally, we will feed distance to centroid scores into the supervised model and calibrate thresholds to control the false positive rate while monitoring centroid drift and internal measures over time.
+DBSCAN significantly outperformed K-Means. By leveraging density-based clustering, it adapted well to the irregular shapes of fraudulent transaction patterns. [cite_start]The model achieved a **recall of ~85%** and an **accuracy of ~82%**, making it a much more viable unsupervised solution for detecting anomalies in unlabeled data compared to K-Means[cite: 19].
 
 ## 5. Comparison of Models
 
-Across all three models, the supervised approaches—Logistic Regression and FraudNet—clearly outperformed the unsupervised K-Means baseline. Logistic Regression on the original features provided a reasonable linear baseline with an ROC-AUC of 0.86 and a PR-AUC of about 0.43. However, it struggled to identify fraud consistently, missing over a thousand fraudulent transactions and achieving a relatively weak fraud F1-score. When trained on PCA-reduced features, its performance dropped across all major metrics, confirming that PCA removed meaningful structure that the linear model relied on.
+We evaluated four distinct models: two supervised (Logistic Regression, FraudNet) and two unsupervised (K-Means, DBSCAN).
 
-FraudNet, the neural network, delivered the strongest overall performance. Using the full feature set, it reached an ROC-AUC of 0.90 and a higher PR-AUC of roughly 0.55, indicating better ranking and separation between fraud and non-fraud. It also produced higher fraud recall (around 78%) and a noticeably stronger fraud F1-score than Logistic Regression, demonstrating that a nonlinear architecture captures fraud patterns that the linear model cannot. Like Logistic Regression, the PCA version of FraudNet underperformed the full model, reinforcing that dimensionality reduction removed informative signals.
+1.  **Supervised Learning Dominance:**
+    * **FraudNet (Neural Network)** was the top performer overall, achieving an **ROC-AUC of 0.90** and the best balance of precision and recall. Its non-linear architecture allowed it to capture complex fraud patterns that the linear Logistic Regression model missed.
+    * **Logistic Regression** served as a decent baseline (ROC-AUC 0.86) but struggled with lower precision and higher false negatives compared to the Neural Network.
 
-K-Means, the unsupervised model, performed the weakest. After mapping clusters to labels, it achieved only 63% accuracy with fraud precision around 61% and recall around 73%, indicating substantial overlap between clusters and high false-positive rates. Its internal clustering metrics also showed poor separation, confirming that fraudulent transactions do not form clean geometric clusters that K-Means can detect.
+2.  **Unsupervised Learning Insights:**
+    * **DBSCAN vs. K-Means:** DBSCAN proved to be the superior unsupervised method. [cite_start]While K-Means suffered from the "spherical assumption" (Accuracy ~63%), DBSCAN's ability to handle noise and arbitrary shapes boosted accuracy to **~82%** and recall to **~85%**[cite: 19].
+    * This suggests that unsupervised learning *can* be effective for fraud detection if the model accounts for the density and irregularity of outliers, rather than just geometric distance.
 
-Overall, FraudNet is the strongest model, providing the best balance of precision, recall, and ranking performance. Logistic Regression serves as a solid interpretable baseline but struggles with the complexity of fraud data, while K-Means should be viewed mainly as an exploratory or supportive tool rather than a standalone fraud detection method.
+**Conclusion:**
+For a deployed system, **FraudNet** is the recommended primary model due to its high F1-score and robustness. However, **DBSCAN** shows great promise as a complementary tool for flagging potential new fraud patterns (outliers) that supervised models might not yet be trained on.
 
-<img alt="Logistic Regression vs Neural Network PR-AUC curve"  src="assets/LR_vs_NN.png"  width="520"/>
+<img alt="Logistic Regression vs Neural Network PR-AUC curve" src="assets/LR_vs_NN.png" width="520"/>
