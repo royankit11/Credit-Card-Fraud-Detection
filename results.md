@@ -112,7 +112,7 @@ To make a more advanced supervised model, we architected a neural network, calle
 | **Macro Avg** | 0.5663 | 0.7971 | 0.5731 | 118,108 |
 | **Weighted Avg** | 0.9600 | 0.8321 | 0.8824 | 118,108 |
 
-**ROC AUC:** `0.9007`  
+**ROC AUC:** `0.8776`  
 
 
 #### Confusion Matrices
