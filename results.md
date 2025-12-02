@@ -164,15 +164,15 @@ To further improve FraudNet performance, we plan to:
 
 ### 4.6 K-Means (Unsupervised) Results and Analysis
 
-To separate fraud from non-fraud, we set $K=2$ and evaluated how K-Means performs on the engineered features. To avoid overwhelming the clustering with very high-dimensional signals, we excluded the electronic footprint features (V1–V339). The dataset was balanced using augmentation techniques. [cite_start]Since K-Means is label-free, we mapped the resulting clusters to classes (Fraud vs. Non-Fraud) based on the majority vote of the training labels[cite: 13].
+To separate fraud from non-fraud, we set $K=2$ and evaluated how K-Means performs on the engineered features. To avoid overwhelming the clustering with very high-dimensional signals, we excluded the electronic footprint features (V1–V339). The dataset was balanced using augmentation techniques. Since K-Means is label-free, we mapped the resulting clusters to classes (Fraud vs. Non-Fraud) based on the majority vote of the training labels.
 
 #### **[RESULTS] K-Means Evaluation**
 
 We evaluated the model using both internal clustering metrics and external classification metrics.
 
 **Internal Indices (Cluster Quality)**
-* [cite_start]**Silhouette Score:** `0.1516` (Test) - The low score indicates that the clusters are overlapping and not well-separated.
-* [cite_start]**Davies-Bouldin Index:** `2.9519` - A high value confirms poor separation between fraud and non-fraud clusters.
+* **Silhouette Score:** `0.1516` (Test) - The low score indicates that the clusters are overlapping and not well-separated.
+* **Davies-Bouldin Index:** `2.9519` - A high value confirms poor separation between fraud and non-fraud clusters.
 
 **External Indices (Classification Performance)**
 
@@ -198,23 +198,23 @@ We evaluated the model using both internal clustering metrics and external class
 
 #### **Analysis**
 
-K-Means provided a structural baseline but ultimately struggled with this dataset. The method assumes spherical, distinct clusters, whereas fraud data often exhibits complex, non-globular distributions. The low Silhouette score (~0.15) confirms that the clusters were not distinct. [cite_start]While the recall (~73%) was decent, the high false-positive rate suggests that K-Means is better suited as a feature generator or an early-stage filter rather than a standalone fraud detector.
+K-Means provided a structural baseline but ultimately struggled with this dataset. The method assumes spherical, distinct clusters, whereas fraud data often exhibits complex, non-globular distributions. The low Silhouette score (~0.15) confirms that the clusters were not distinct. While the recall (~73%) was decent, the high false-positive rate suggests that K-Means is better suited as a feature generator or an early-stage filter rather than a standalone fraud detector.
 
 ### 4.7 DBSCAN (Unsupervised) Results and Analysis
 
-Addressing the limitations of K-Means, we implemented **DBSCAN (Density-Based Spatial Clustering of Applications with Noise)**. [cite_start]Unlike K-Means, DBSCAN does not require specifying the number of clusters in advance and can identify outliers (noise) effectively, which is ideal for anomaly detection[cite: 17].
+Addressing the limitations of K-Means, we implemented **DBSCAN (Density-Based Spatial Clustering of Applications with Noise)**. Unlike K-Means, DBSCAN does not require specifying the number of clusters in advance and can identify outliers (noise) effectively, which is ideal for anomaly detection.
 
 #### **Parameter Selection**
 We determined the optimal parameters through K-distance graph analysis:
 * **MinPts:** 2
 * **Epsilon ($\epsilon$):** 2.4
-* [cite_start]**Rationale:** This combination yielded the highest accuracy while maintaining a low noise ratio, which is critical for practical fraud detection[cite: 18].
+* **Rationale:** This combination yielded the highest accuracy while maintaining a low noise ratio, which is critical for practical fraud detection.
 
 #### **[RESULTS] DBSCAN Evaluation**
 
 **Internal Indices**
-* [cite_start]**Silhouette Score:** `-0.057` (Test) [cite: 19]
-* [cite_start]**Davies-Bouldin Index:** `1.6727` [cite: 19]
+* **Silhouette Score:** `-0.057` (Test)
+* **Davies-Bouldin Index:** `1.6727`
 
 **External Indices (Classification Performance)**
 
@@ -225,7 +225,7 @@ We determined the optimal parameters through K-distance graph analysis:
 | **Recall** | 0.8255 | **0.8503** | Close to 1 |
 | **F1-Score** | 0.8043 | **0.8273** | Close to 1 |
 
-* [cite_start]**Noise Handling:** The model identified approximately **16.78%** of the test data as noise, effectively separating distinct outliers from the main transaction clusters[cite: 19].
+* **Noise Handling:** The model identified approximately **16.78%** of the test data as noise, effectively separating distinct outliers from the main transaction clusters.
 
 #### **Confusion Matrices**
 
@@ -242,7 +242,7 @@ We determined the optimal parameters through K-distance graph analysis:
 
 #### **Analysis**
 
-DBSCAN significantly outperformed K-Means. By leveraging density-based clustering, it adapted well to the irregular shapes of fraudulent transaction patterns. [cite_start]The model achieved a **recall of ~85%** and an **accuracy of ~82%**, making it a much more viable unsupervised solution for detecting anomalies in unlabeled data compared to K-Means[cite: 19].
+DBSCAN significantly outperformed K-Means. By leveraging density-based clustering, it adapted well to the irregular shapes of fraudulent transaction patterns. The model achieved a **recall of ~85%** and an **accuracy of ~82%**, making it a much more viable unsupervised solution for detecting anomalies in unlabeled data compared to K-Means.
 
 ## 5. Comparison of Models
 
@@ -253,7 +253,7 @@ We evaluated four distinct models: two supervised (Logistic Regression, FraudNet
     * **Logistic Regression** served as a decent baseline (ROC-AUC 0.86) but struggled with lower precision and higher false negatives compared to the Neural Network.
 
 2.  **Unsupervised Learning Insights:**
-    * **DBSCAN vs. K-Means:** DBSCAN proved to be the superior unsupervised method. [cite_start]While K-Means suffered from the "spherical assumption" (Accuracy ~63%), DBSCAN's ability to handle noise and arbitrary shapes boosted accuracy to **~82%** and recall to **~85%**[cite: 19].
+    * **DBSCAN vs. K-Means:** DBSCAN proved to be the superior unsupervised method. While K-Means suffered from the "spherical assumption" (Accuracy ~63%), DBSCAN's ability to handle noise and arbitrary shapes boosted accuracy to **~82%** and recall to **~85%**.
     * This suggests that unsupervised learning *can* be effective for fraud detection if the model accounts for the density and irregularity of outliers, rather than just geometric distance.
 
 **Conclusion:**
