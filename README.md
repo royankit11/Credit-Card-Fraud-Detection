@@ -28,7 +28,10 @@
 /src/models/logreg_lightweight.pkl: Logistic regression model on the non-PCA dataset \
 /src/models/logreg_pca.pkl: Logistic regression model on the PCA dataset \
 /src/models/torch_nn_full.pt: NN model on the non_PCA dataset \
-/src/models/torch_nn_pca.pt: NN model on the PCA dataset
-
+/src/models/torch_nn_pca.pt: NN model on the PCA dataset \
+/src/DBSCAN/: All code used for DBSCAN implementation \
+/src/DBSCAN/DBSCAN.py: Implements DBSCAN model \
+/src/DBSCAN/KNN.py: Computes k-distance curves to estimate DBSCAN clustering parameters \
+/src/DBSCAN/split.py: Shuffles dataset and splits into test and training 
 
 
