@@ -19,9 +19,9 @@ For this project, we prioritize metrics that effectively evaluate fraud detectio
 
 Our objective is to maximize recall to ensure fraudulent transactions are caught, while maintaining reasonable precision to avoid blocking legitimate customers.
 
-* **Recall:** $\ge 99\%$ (Catch almost all fraud)
-* **Precision:** $\ge 95\%$ (Minimize false positives)
-* **F1-Score:** $\ge 0.95$ (Strong balance)
+* **Recall:** 99% (Catch almost all fraud)
+* **Precision:** 95% (Minimize false positives)
+* **F1-Score:** 95% (Strong balance)
 * **PR-AUC:** High scores indicating robust performance across thresholds.
 * **Constraints:** The system must remain fair across customer groups and operate efficiently in real-time.
 
