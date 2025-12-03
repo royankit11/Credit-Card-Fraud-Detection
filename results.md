@@ -210,9 +210,9 @@ The diagram below illustrates the core concept of DBSCAN. It defines clusters us
 <img src="src/Kmeans/dbscan_concept.png" alt="DBSCAN Concept" width="500"/>
 
 #### Parameter Tuning: K-distance Graph
-DBSCAN requires two key parameters: **Epsilon ($\epsilon$)** (the radius of the neighborhood) and **MinPts** (minimum number of points to form a dense region).
+DBSCAN requires two key parameters: **Epsilon (ε)** (the radius of the neighborhood) and **MinPts** (minimum number of points to form a dense region).
 
-We determined these parameters using the **K-distance graph**. We calculated the distance to the $k$-th nearest neighbor ($k=2$) for all data points and sorted them. The point of maximum curvature, or the "elbow," indicates the optimal $\epsilon$ value where the density distribution changes significantly.
+We determined these parameters using the **K-distance graph**. We calculated the distance to the k-th nearest neighbor (k=2) for all data points and sorted them. The point of maximum curvature, or the "elbow," indicates the optimal $\epsilon$ value where the density distribution changes significantly.
 
 <table align="center">
   <tr>
@@ -227,7 +227,7 @@ We determined these parameters using the **K-distance graph**. We calculated the
 
 **Selected Parameters:**
 * **MinPts:** 2 (Chosen to detect even small groups of anomalies)
-* **Epsilon ($\epsilon$):** 2.4 (Determined from the elbow point in the graph above)
+* **Epsilon (ε):** 2.4 (Determined from the elbow point in the graph above)
 
 #### **[RESULTS] DBSCAN Evaluation**
 
