@@ -1,4 +1,6 @@
-Website is [here](https://royankit11.github.io/Credit-Card-Fraud-Detection/)
+# Credit Card Fraud Detection
+
+Visit the project [website](https://royankit11.github.io/Credit-Card-Fraud-Detection/)!
 
 ## Directory and File Explanation
 
