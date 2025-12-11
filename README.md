@@ -1,13 +1,4 @@
-## Contribution Table
-
-| Name             | Midterm Contributions              |
-|------------------|------------------------------------|
-| Ankit Roy        | Analyzing neural network model     |
-| Hadi Malik       | Comparing all the models           |
-| Yuha Song        | Evaluating DBSCAN                  |
-| Musaddik Hossain | Implementing DBSCAN                |
-| Connor Priest    | Implementing neural networkmodel   |
-
+Website is [here]([url](https://royankit11.github.io/Credit-Card-Fraud-Detection/))
 
 ## Directory and File Explanation
 
