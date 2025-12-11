@@ -1,4 +1,4 @@
-Website is [here]([url](https://royankit11.github.io/Credit-Card-Fraud-Detection/))
+Website is [here](https://royankit11.github.io/Credit-Card-Fraud-Detection/)
 
 ## Directory and File Explanation
 
