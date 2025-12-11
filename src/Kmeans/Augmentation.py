@@ -1,5 +1,3 @@
-
-# Make the minority fraud class (isFraud=1) 1:1 with the majority class
 import pandas as pd
 
 IN_PATH = "processed_train.csv"
